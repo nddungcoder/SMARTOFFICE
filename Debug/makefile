@@ -9,9 +9,13 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include tools/Src/subdir.mk
 -include Startup/subdir.mk
--include Src/subdir.mk
+-include Sevice/Src/Output/subdir.mk
+-include Sevice/Src/Input/subdir.mk
+-include Sevice/Src/Com/subdir.mk
 -include Drivers/Src/subdir.mk
+-include Core/Src/subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)

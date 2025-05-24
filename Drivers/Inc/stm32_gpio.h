@@ -1,84 +1,87 @@
-/*
- * stm32_gpio.h
- *
- *  Created on: May 15, 2025
- *      Author: nguye
- */
+/* stm32_gpio.h - Minimal GPIO HAL Interface for STM32F103C6T6 with EXTI */
 
-#ifndef INC_STM32_GPIO_H_
-#define INC_STM32_GPIO_H_
+#ifndef __STM32_GPIO_H
+#define __STM32_GPIO_H
 
-#include "stm32f1.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-typedef struct
-{
-	uint8_t GPIO_PinNumber;
-	uint8_t GPIO_PinMode;
-	uint8_t GPIO_PinSpeed;
-	uint8_t GPIO_PinPuPdControll;
-	uint8_t GPIO_PinOPType;
-	uint8_t GPIO_PinAltFunMode;
-}GPIO_PinConfig_t;
+#include "stm32f1xx_hal_def.h"
 
-typedef struct
-{
-	GPIO_RegDef_t *pGPIOx;
-	GPIO_PinConfig_t GPIO_PinConfig;
-}GPIO_Handle_t;
+/* GPIO Pin definition */
+#define GPIO_PIN_0      ((uint16_t)0x0001)
+#define GPIO_PIN_1      ((uint16_t)0x0002)
+#define GPIO_PIN_2      ((uint16_t)0x0004)
+#define GPIO_PIN_3      ((uint16_t)0x0008)
+#define GPIO_PIN_4      ((uint16_t)0x0010)
+#define GPIO_PIN_5      ((uint16_t)0x0020)
+#define GPIO_PIN_6      ((uint16_t)0x0040)
+#define GPIO_PIN_7      ((uint16_t)0x0080)
+#define GPIO_PIN_8      ((uint16_t)0x0100)
+#define GPIO_PIN_9      ((uint16_t)0x0200)
+#define GPIO_PIN_10     ((uint16_t)0x0400)
+#define GPIO_PIN_11     ((uint16_t)0x0800)
+#define GPIO_PIN_12     ((uint16_t)0x1000)
+#define GPIO_PIN_13     ((uint16_t)0x2000)
+#define GPIO_PIN_14     ((uint16_t)0x4000)
+#define GPIO_PIN_15     ((uint16_t)0x8000)
+#define GPIO_PIN_ALL    ((uint16_t)0xFFFF)
 
-#define GPIO_PIN_NO_0 0
-#define GPIO_PIN_NO_1 1
-#define GPIO_PIN_NO_2 2
-#define GPIO_PIN_NO_3 3
-#define GPIO_PIN_NO_4 4
-#define GPIO_PIN_NO_5 5
-#define GPIO_PIN_NO_6 6
-#define GPIO_PIN_NO_7 7
-#define GPIO_PIN_NO_8 8
-#define GPIO_PIN_NO_9 9
-#define GPIO_PIN_NO_10 10
-#define GPIO_PIN_NO_11 11
-#define GPIO_PIN_NO_12 12
-#define GPIO_PIN_NO_13 13
-#define GPIO_PIN_NO_14 14
-#define GPIO_PIN_NO_15 15
+/* GPIO Mode */
+#define  GPIO_MODE_INPUT                        0x00000000u   /*!< Input Floating Mode                   */
+#define  GPIO_MODE_OUTPUT_PP                    0x00000001u   /*!< Output Push Pull Mode                 */
+#define  GPIO_MODE_OUTPUT_OD                    0x00000011u   /*!< Output Open Drain Mode                */
+#define  GPIO_MODE_AF_PP                        0x00000002u   /*!< Alternate Function Push Pull Mode     */
+#define  GPIO_MODE_AF_OD                        0x00000012u   /*!< Alternate Function Open Drain Mode    */
+#define  GPIO_MODE_AF_INPUT                     GPIO_MODE_INPUT          /*!< Alternate Function Input Mode         */
 
-// GPIO Pin modes
-#define GPIO_MODE_INPUT        0
-#define GPIO_MODE_OUTPUT_PP    1
-#define GPIO_MODE_OUTPUT_OD    2
-#define GPIO_MODE_AF_PP        3
-#define GPIO_MODE_AF_OD        4
-#define GPIO_MODE_ANALOG       5
-#define GPIO_MODE_INPUT_PD     6
-#define GPIO_MODE_INPUT_PU     7
-#define GPIO_MODE_IT_FT        8
-#define GPIO_MODE_IT_RT        9
-#define GPIO_MODE_IT_RFT       10
+#define  GPIO_MODE_ANALOG                       0x00000003u   /*!< Analog Mode  */
 
-// GPIO Speed
-#define GPIO_SPEED_LOW         0
-#define GPIO_SPEED_MEDIUM      1
-#define GPIO_SPEED_HIGH        2
+#define  GPIO_MODE_IT_RISING                    0x10110000u   /*!< External Interrupt Mode with Rising edge trigger detection          */
+#define  GPIO_MODE_IT_FALLING                   0x10210000u   /*!< External Interrupt Mode with Falling edge trigger detection         */
+#define  GPIO_MODE_IT_RISING_FALLING            0x10310000u   /*!< External Interrupt Mode with Rising/Falling edge trigger detection  */
 
-void GPIO_PeriClockControl(GPIO_RegDef_t * pGPIOx, uint8_t EnOrDi);
-void GPIO_Init(GPIO_Handle_t *pGPIOHandle);
+#define  GPIO_MODE_EVT_RISING                   0x10120000u   /*!< External Event Mode with Rising edge trigger detection               */
+#define  GPIO_MODE_EVT_FALLING                  0x10220000u   /*!< External Event Mode with Falling edge trigger detection              */
+#define  GPIO_MODE_EVT_RISING_FALLING           0x10320000u   /*!< External Event Mode with Rising/Falling edge trigger detection		*/
 
-void GPIO_DeInit(GPIO_RegDef_t *pGPIOx);
+/* GPIO Pull */
+#define GPIO_NOPULL            0x00u
+#define GPIO_PULLUP            0x01u
+#define GPIO_PULLDOWN          0x02u
 
-uint8_t GPIO_ReadFromPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
-uint16_t GPIO_ReadFromPort(GPIO_RegDef_t *pGPIOx);
+/* GPIO Speed */
+#define GPIO_SPEED_LOW         0x00u
+#define GPIO_SPEED_MEDIUM      0x01u
+#define GPIO_SPEED_HIGH        0x02u
 
-void GPIO_WriteToPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber, uint8_t Value);
-void GPIO_WriteToPort(GPIO_RegDef_t *pGPIOx, uint16_t Value);
+/* GPIO Pin state */
+typedef enum {
+  GPIO_PIN_RESET = 0u,
+  GPIO_PIN_SET
+} GPIO_PinState;
 
-void GPIO_TogglePin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
+/* GPIO Initialization Structure */
+typedef struct {
+  uint32_t Pin;     // GPIO_PIN_X
+  uint32_t Mode;    // GPIO_MODE_OUTPUT_PP, etc.
+  uint32_t Pull;    // GPIO_PULLUP, etc.
+  uint32_t Speed;   // GPIO_SPEED_HIGH, etc.
+} GPIO_InitTypeDef;
 
-void GPIO_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnOrDi);
-void GPIO_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
-void GPIO_IRQHandling(uint8_t PinNumber);
+/* Function Prototypes */
+void GPIO_Init(GPIO_TypeDef *GPIOx, GPIO_InitTypeDef *GPIO_Init);
+void GPIO_WritePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState);
+GPIO_PinState GPIO_ReadPin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
+void GPIO_TogglePin(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin);
 
+/* EXTI Functions */
+void GPIO_EXTI_IRQHandler(uint16_t GPIO_Pin);
+void GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 
+#ifdef __cplusplus
+}
+#endif
 
-
-#endif /* INC_STM32_GPIO_H_ */
+#endif /* __STM32_GPIO_H */

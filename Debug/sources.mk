@@ -22,7 +22,11 @@ C_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
+Core/Src \
 Drivers/Src \
-Src \
+Sevice/Src/Com \
+Sevice/Src/Input \
+Sevice/Src/Output \
 Startup \
+tools/Src \
 
