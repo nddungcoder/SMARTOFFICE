@@ -4,14 +4,14 @@
 
 #define START_BYTE                  0xAA         // Byte bắt đầu frame
 #define MAX_PAYLOAD_SIZE           12           // Số byte dữ liệu payload tối đa
-#define CHECKSUM_SIZE              2            // Số byte kiểm tra
-#define FRAME_OVERHEAD             (1 + 2 + 1 + 2) // Start + Header + Length + Checksum
+#define CHECKSUM_SIZE              2            // Số byte CRC 
+
+#define FRAME_OVERHEAD             (1 + 3  + 2) // Start + Header + Checksum
 
 // Cấu trúc frame dữ liệu
 typedef struct {
     uint8_t  start;                          // 1 byte: START_BYTE = 0xAA
-    uint8_t  header;                         // 1 byte: Loại message (Type)
-    uint8_t  length;                         // 1 byte: Độ dài Payload
+    uint8_t  header[Header_Size];            // 3 byte: Type message (1Byte) + Device (1Byte) + Length(1Byte)
     uint8_t  payload[MAX_PAYLOAD_SIZE];      // N byte: dữ liệu
     uint16_t checksum;                       // 2 byte: CRC hoặc tổng kiểm tra
 } frame_message_t;
@@ -30,13 +30,13 @@ typedef enum {
     PORT_B = 0x02
 } port_t;
 
-// Enum định nghĩa loại cảm biến
+// Enum định nghĩa mã ngoại vi
 typedef enum {
-    SENSOR_LUX  = 0x01,
-    SENSOR_RTC  = 0x02,
+    SENSOR_CDS  = 0x01,
+    SENSOR_  = 0x02,
     SENSOR_NTC  = 0x03,
     SENSOR_RES  = 0x04
-} sensor_type_t;
+} device_code_t;
 
 // ==== Prototype của các hàm xử lý frame ====
 

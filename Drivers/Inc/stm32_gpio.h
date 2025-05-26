@@ -59,7 +59,7 @@ extern "C" {
 /* GPIO Pin state */
 typedef enum {
   GPIO_PIN_RESET = 0u,
-  GPIO_PIN_SET
+  GPIO_PIN_SET = 1u
 } GPIO_PinState;
 
 /* GPIO Initialization Structure */

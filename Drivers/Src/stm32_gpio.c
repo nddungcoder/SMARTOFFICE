@@ -97,5 +97,5 @@ void GPIO_EXTI_IRQHandler(uint16_t GPIO_Pin)
 
 __weak void GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    // Override in user file
+    // Override in sevice
 }
