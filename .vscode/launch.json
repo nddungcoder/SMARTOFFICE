@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/nguye/STM32CubeIDE/workspace_1.17.0/SMARTOFFICE",
-      "program": "c:/Users/nguye/STM32CubeIDE/workspace_1.17.0/SMARTOFFICE/build/Debug/outDebug",
+      "cwd": "c:/Users/nguye/STM32CubeIDE/workspace_1.17.0/SMARTOFFICE/Sevice/Src/Com",
+      "program": "c:/Users/nguye/STM32CubeIDE/workspace_1.17.0/SMARTOFFICE/Sevice/Src/Com/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
