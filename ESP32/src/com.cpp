@@ -93,23 +93,76 @@ void uart_event_task(void *pvParameters)
         }
     }
 }
+typedef enum {
+    WAITING_TO_SEND,
+    WAITING_FOR_RESPONSE,
+    RESPONSE_ACKED,
+    RESPONSE_NACKED
+} uart_tx_state_t;
+
+volatile uart_tx_state_t tx_state = WAITING_TO_SEND;
+static uint32_t retry_count = 0;
+static uint32_t last_sent_time = 0; 
 
 void uart_tx_task(void *param)
 {
     while (1)
     {
-        if (!empty(&txQueue))
+        switch (tx_state)
         {
-            Message_Convert_t mes = front(&txQueue);
-            if (mes.data != NULL)
+        case WAITING_TO_SEND:
+            if (!empty(&txQueue))
             {
-                Serial.print("Sending frame: ");
-                // Gửi frame qua UART
-                uart_write_bytes(UART_NUM, (const char *)mes.data, FRAME_SIZE);
-                pop(&txQueue);
+                Message_Convert_t mes = front(&txQueue);
+                if (mes.data != NULL)
+                {
+                    uart_write_bytes(UART_NUM, (const char *)mes.data, FRAME_SIZE);
+                    
+                    tx_state = WAITING_FOR_RESPONSE;
+                    last_sent_time = millis();
+                    retry_count = 0;
+                }
             }
+            break;
+
+        case WAITING_FOR_RESPONSE:
+            // Không xử lý gì ở đây, chỉ chờ phản hồi từ hàm COM_HandleResponseMessage()
+            // Timeout nếu quá 1000ms mà chưa được cập nhật ACK/NACK
+            if ((millis() - last_sent_time) > 1000)
+            {
+                Serial.println("Timeout khi chờ phản hồi, thử lại...");
+                tx_state = RESPONSE_NACKED;
+            }
+            break;
+
+        case RESPONSE_ACKED:
+            Serial.println("Nhận ACK, gửi tiếp frame tiếp theo.");
+            pop(&txQueue);
+            tx_state = WAITING_TO_SEND;
+            break;
+
+        case RESPONSE_NACKED:
+            retry_count++;
+            if (retry_count <= 3)
+            {
+                Serial.print("Nhận NACK hoặc timeout, thử lại lần ");
+                Serial.println(retry_count);
+                tx_state = WAITING_TO_SEND; 
+            }
+            else
+            {
+                Serial.println("Gửi thất bại sau 3 lần. Bỏ qua frame.");
+                pop(&txQueue);
+                tx_state = WAITING_TO_SEND;
+            }
+            break;
+
+        default:
+            tx_state = WAITING_TO_SEND; 
+            break;
         }
-        vTaskDelay(10 / portTICK_PERIOD_MS); // Tạm nghỉ, tránh chiếm CPU
+
+        vTaskDelay(10 / portTICK_PERIOD_MS); // Tránh chiếm CPU
     }
 }
 
@@ -124,51 +177,51 @@ void COM_HandleNotifyMessage(device_manager &device)
         case CDS:
             device.setLdrLuxBytes(message.payload[0], message.payload[1], message.payload[2], message.payload[3]);
 
-            Serial.print(String("CDS "));
-            Serial.print(" ");
-            Serial.println(device.getLdrLux());
+            // Serial.print(String("CDS "));
+            // Serial.print(" ");
+            // Serial.println(device.getLdrLux());
             break;
         case MQ2:
             device.setGasPPMBytes(message.payload[0], message.payload[1], message.payload[2], message.payload[3]);
 
-            Serial.print(String("AIR_QUALITY "));
-            Serial.print(" ");
-            Serial.println(device.getGasPPM());
+            // Serial.print(String("AIR_QUALITY "));
+            // Serial.print(" ");
+            // Serial.println(device.getGasPPM());
             break;
         case DHT11_TEMP:
             device.setDhtTemperatureBytes(message.payload[0], message.payload[1], message.payload[2], message.payload[3]);
 
-            Serial.print(String("DHT11_TEMP "));
-            Serial.print(" ");
-            Serial.println(device.getDhtTemperature());
+            // Serial.print(String("DHT11_TEMP "));
+            // Serial.print(" ");
+            // Serial.println(device.getDhtTemperature());
             break;
         case DHT11_HUMI:
             device.setDhtHumidityBytes(message.payload[0], message.payload[1], message.payload[2], message.payload[3]);
 
-            Serial.print(String("DHT11_HUMI "));
-            Serial.print(" ");
-            Serial.println(device.getDhtHumidity());
+            // Serial.print(String("DHT11_HUMI "));
+            // Serial.print(" ");
+            // Serial.println(device.getDhtHumidity());
             break;
         case LED:
             device.setLEDStatusBytes(message.payload[0], message.payload[1], message.payload[2], message.payload[3]);
 
-            Serial.print(String("LED "));
-            Serial.print(" ");
-            Serial.println(device.getLEDStatus());
+            // Serial.print(String("LED "));
+            // Serial.print(" ");
+            // Serial.println(device.getLEDStatus());
             break;
         case MOTOR:
             device.setMotorSpeedBytes(message.payload[0], message.payload[1], message.payload[2], message.payload[3]);
 
-            Serial.print(String("MOTOR "));
-            Serial.print(" ");
-            Serial.println(device.getMotorSpeed());
+            // Serial.print(String("MOTOR "));
+            // Serial.print(" ");
+            // Serial.println(device.getMotorSpeed());
             break;
         case SIREN:
             device.setSirenStatusBytes(message.payload[0], message.payload[1], message.payload[2], message.payload[3]);
 
-            Serial.print(String("SIREN "));
-            Serial.print(" ");
-            Serial.println(device.getSirenStatus());
+            // Serial.print(String("SIREN "));
+            // Serial.print(" ");
+            // Serial.println(device.getSirenStatus());
             break;
         }
     }
@@ -180,7 +233,11 @@ void COM_HandleResponseMessage(FrameQueue &queue)
     {
         if (message.payload[0] == RESPONSE_ACK)
         {
-            pop(&queue);
+            tx_state = RESPONSE_ACKED;
+        }
+        else if (message.payload[0] == RESPONSE_NACK)
+        {
+            tx_state = RESPONSE_NACKED;
         }
     }
 }
