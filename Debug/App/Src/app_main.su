@@ -1,0 +1,3 @@
+../App/Src/app_main.c:21:6:SystemClock_Config	4	static
+../App/Src/app_main.c:58:6:App_Init	8	static
+../App/Src/app_main.c:78:6:App_Loop	8	static

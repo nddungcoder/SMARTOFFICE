@@ -1,7 +1,7 @@
 #include "queue.h"
 #include <string.h>
 
-void init(FrameQueue *q) {
+void Queue_init(FrameQueue *q) {
     q->front = 0;
     q->rear = -1;
     q->size = 0;
@@ -19,11 +19,11 @@ int size(const FrameQueue *q) {
     return q->size;
 }
 
-bool push(FrameQueue *q, const Frame *f) {
+bool push(FrameQueue *q, const message_t f, uint8_t length) {
     if (full(q)) return false;
 
     q->rear = (q->rear + 1) % FRAME_QUEUE_CAPACITY;
-    memcpy(&q->buffer[q->rear], f, sizeof(Frame));
+    memcpy(&q->buffer[q->rear], &f, length);
     q->size++;
     return true;
 }
@@ -36,12 +36,12 @@ bool pop(FrameQueue *q) {
     return true;
 }
 
-Frame* front(const FrameQueue *q) {
+message_t* front(const FrameQueue *q) {
     if (empty(q)) return NULL;
-    return (Frame*)&q->buffer[q->front];
+    return (message_t*)&q->buffer[q->front];
 }
 
-Frame* back(const FrameQueue *q) {
+message_t* back(const FrameQueue *q) {
     if (empty(q)) return NULL;
-    return (Frame*)&q->buffer[q->rear];
+    return (message_t*)&q->buffer[q->rear];
 }

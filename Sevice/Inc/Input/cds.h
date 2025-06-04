@@ -5,9 +5,37 @@
  *      Author: nguye
  */
 
-#ifndef INC_CDS_H_
-#define INC_CDS_H_
+#ifndef __CDS_H
+#define __CDS_H
 
 
+#include <stdint.h>
+#include "stm32f1xx.h"
 
-#endif /* INC_CDS_H_ */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**
+ * @brief Khởi tạo cảm biến ánh sáng CDS sử dụng PA0 (ADC1 Channel 0).
+ */
+void CDS_Init(void);
+
+/**
+ * @brief Đọc giá trị ADC thô từ cảm biến CDS.
+ * @return Giá trị ADC 12-bit (0–4095).
+ */
+uint16_t CDS_ReadRaw(void);
+
+/**
+ * @brief Chuyển đổi giá trị ADC sang lux.
+ * @return Độ sáng đo được lux.
+ */
+float CDS_ReadLux(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif  // __CDS_H
+

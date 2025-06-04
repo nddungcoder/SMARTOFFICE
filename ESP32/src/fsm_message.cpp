@@ -81,7 +81,7 @@ void Fsm_Get_Message(uint8_t datain, uint8_t dataout[])
         {
             // Check Length
             expected_payload_length = datain;
-            if (expected_payload_length > MAX_PAYLOAD_SIZE)
+            if (expected_payload_length > PAYLOAD_SIZE)
             {
                 Clear_All_State_Fsm();
             }

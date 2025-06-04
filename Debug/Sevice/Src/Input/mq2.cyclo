@@ -1,0 +1,4 @@
+../Sevice/Src/Input/mq2.c:26:6:MQ2_Init	1
+../Sevice/Src/Input/mq2.c:54:17:MQ2_ReadRaw	1
+../Sevice/Src/Input/mq2.c:61:14:MQ2_ReadRs	1
+../Sevice/Src/Input/mq2.c:72:7:MQ2_ReadAirQuality	1

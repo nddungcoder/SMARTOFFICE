@@ -45,7 +45,7 @@ uint16_t Message_Calculate_Checksum(const uint8_t *buf, uint8_t len)
 //     return count; // Trả về độ dài của Message
 // }
 
-void Create_Message_COMMAND(ID_t id, float value, frame_message_t messageout)
+void Create_Message_COMMAND(ID_t id, float value, message_t messageout)
 {
     if (messageout.payload == NULL)
         return;
@@ -96,7 +96,7 @@ uint8_t Create_Message_RESPONSE(uint8_t id, RESPONSE_t r, uint8_t *dataout)
 /**
  * @brief Giải mã frame nhận được
  */
-bool Message_Decode(const uint8_t *buffer, frame_message_t *frame_out)
+bool Message_Decode(const uint8_t *buffer, message_t *frame_out)
 {
     if (buffer == NULL || frame_out == NULL)
         return false;
@@ -108,12 +108,12 @@ bool Message_Decode(const uint8_t *buffer, frame_message_t *frame_out)
     memcpy(frame_out->header, &buffer[1], HEADER_SIZE);
     uint8_t payload_len = frame_out->header[2];
 
-    if (payload_len > MAX_PAYLOAD_SIZE)
+    if (payload_len > PAYLOAD_SIZE)
         return false;
 
     memcpy(frame_out->payload, &buffer[1 + HEADER_SIZE], payload_len);
 
-    uint8_t temp[HEADER_SIZE + MAX_PAYLOAD_SIZE];
+    uint8_t temp[HEADER_SIZE + PAYLOAD_SIZE];
     memcpy(temp, frame_out->header, HEADER_SIZE);
     memcpy(temp + HEADER_SIZE, frame_out->payload, payload_len);
 

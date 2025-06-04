@@ -9,6 +9,8 @@ extern "C" {
 
 #include "stm32f1xx_hal_def.h"
 
+#define SystemCoreClock 72000000
+
 /* Timer base initialization structure */
 typedef struct {
   uint32_t Prescaler;        // Clock prescaler
@@ -69,12 +71,14 @@ typedef struct __TIM_HandleTypeDef {
 #define TIM_CHANNEL_3                    0x00000008U
 #define TIM_CHANNEL_4                    0x0000000CU
 
+void TIM_SetCompare(TIM_HandleTypeDef *htim, uint32_t Channel, uint32_t Compare);
+
 /* Timer HAL functions */
-HAL_StatusTypeDef TIM_Base_Init(TIM_HandleTypeDef *htim);
-HAL_StatusTypeDef TIM_PWM_Init(TIM_HandleTypeDef *htim);
-HAL_StatusTypeDef TIM_PWM_ConfigChannel(TIM_HandleTypeDef *htim, TIM_OC_InitTypeDef *sConfig, uint32_t Channel);
-HAL_StatusTypeDef TIM_PWM_Start(TIM_HandleTypeDef *htim, uint32_t Channel);
-HAL_StatusTypeDef TIM_PWM_Stop(TIM_HandleTypeDef *htim, uint32_t Channel);
+StatusTypeDef TIM_Base_Init(TIM_HandleTypeDef *htim);
+StatusTypeDef TIM_PWM_Init(TIM_HandleTypeDef *htim);
+StatusTypeDef TIM_PWM_ConfigChannel(TIM_HandleTypeDef *htim, TIM_OC_InitTypeDef *sConfig, uint32_t Channel);
+StatusTypeDef TIM_PWM_Start(TIM_HandleTypeDef *htim, uint32_t Channel);
+StatusTypeDef TIM_PWM_Stop(TIM_HandleTypeDef *htim, uint32_t Channel);
 
 #ifdef __cplusplus
 }

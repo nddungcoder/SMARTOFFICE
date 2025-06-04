@@ -19,9 +19,14 @@
 extern "C" {
 #endif
 
-// Cấu trúc hàng đợi lưu trữ các khung dữ liệu
+typedef union {
+    message_t frame;                      
+    uint8_t data[FRAME_SIZE];               
+} Message_Convert_t;
+
+
 typedef struct {
-    frame_message_t buffer[FRAME_QUEUE_CAPACITY]; // Bộ đệm chứa các khung
+    Message_Convert_t buffer[FRAME_QUEUE_CAPACITY]; 
     int front;     // Vị trí đầu hàng đợi (frame sắp được lấy ra)
     int rear;      // Vị trí cuối hàng đợi (frame mới được thêm vào)
     int size;      // Số lượng phần tử hiện có trong hàng đợi
@@ -31,16 +36,16 @@ typedef struct {
 void Queue_init(FrameQueue *q);
 
 // Thêm một khung dữ liệu vào cuối hàng đợi (enqueue)
-bool push(FrameQueue *q, const frame_message_t f, uint8_t length);
+bool push(FrameQueue *q, const message_t frame, uint8_t length);
 
 // Xóa một khung dữ liệu ở đầu hàng đợi (dequeue)
 bool pop(FrameQueue *q);
 
 // Truy xuất khung dữ liệu ở đầu hàng đợi (không xóa)
-frame_message_t* front(const FrameQueue *q);
+Message_Convert_t front(const FrameQueue *q);
 
 // Truy xuất khung dữ liệu được thêm gần nhất (cuối hàng đợi)
-frame_message_t* back(const FrameQueue *q);
+Message_Convert_t back(const FrameQueue *q);
 
 // Kiểm tra xem hàng đợi có rỗng hay không
 bool empty(const FrameQueue *q);

@@ -1,0 +1,3 @@
+../Sevice/Src/device_manager.c:12:6:device_init	8	static
+../Sevice/Src/device_manager.c:35:6:READ_Sensor	24	static
+../Sevice/Src/device_manager.c:52:6:Notify_SendMessage	32	static

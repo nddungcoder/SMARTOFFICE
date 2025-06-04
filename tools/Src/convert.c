@@ -6,6 +6,7 @@
  */
 
 #include "convert.h"
+#include <stdio.h>
 
 /*
  * @brief: Chuyển đổi một biến float sang dạng mảng byte (4 byte).
@@ -49,6 +50,16 @@ float Convert_Bytes_To_Float(uint8_t data1, uint8_t data2, uint8_t data3, uint8_
     return input.data_float;
 }
 
+int Convert_Bytes_To_Int(uint8_t data1, uint8_t data2, uint8_t data3, uint8_t data4)
+{
+    data_convert_int_and_bytes input;
+    input.data_bytes[0] = data1;
+    input.data_bytes[1] = data2;
+    input.data_bytes[2] = data3;
+    input.data_bytes[3] = data4;
+    return input.data_int;
+}
+
 /*
  * @brief: Chuyển 2 byte thành biến uint16_t.
  * @param data1: Byte thứ nhất.
@@ -62,3 +73,5 @@ uint16_t Convert_Bytes_To_Uint16(uint8_t data1, uint8_t data2)
     input.data_bytes[1] = data2;
     return input.data_uint16;
 }
+
+

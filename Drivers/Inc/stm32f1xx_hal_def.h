@@ -1,13 +1,13 @@
 /**
   ******************************************************************************
   * @file    stm32f1xx_hal_def.h
-  * @author  MCD Application Team
-  * @brief   This file contains HAL common defines, enumeration, macros and
+  * @author  nddungcoder
+  * @brief   This file contains DUNGX common defines, enumeration, macros and
   *          structures definitions.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2017 STMicroelectronics.
+  * Copyright (c) 2025 nddungcoder.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -28,6 +28,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx.h"
 #include <stddef.h>
+#include <system_stm32f1xx.h>
 
 /* Exported types ------------------------------------------------------------*/
 
@@ -36,11 +37,11 @@ extern "C" {
   */
 typedef enum
 {
-  HAL_OK       = 0x00U,
-  HAL_ERROR    = 0x01U,
-  HAL_BUSY     = 0x02U,
-  HAL_TIMEOUT  = 0x03U
-} HAL_StatusTypeDef;
+  DUNGX_OK       = 0x00U,
+  DUNGX_ERROR    = 0x01U,
+  DUNGX_BUSY     = 0x02U,
+  DUNGX_TIMEOUT  = 0x03U
+} StatusTypeDef;
 
 /**
   * @brief  HAL Lock structures definition
@@ -92,7 +93,7 @@ typedef enum
                                 do{                                        \
                                     if((__HANDLE__)->Lock == HAL_LOCKED)   \
                                     {                                      \
-                                       return HAL_BUSY;                    \
+                                       return DUNGX_BUSY;                    \
                                     }                                      \
                                     else                                   \
                                     {                                      \

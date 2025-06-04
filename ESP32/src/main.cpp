@@ -5,7 +5,14 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <WiFiClient.h>
+
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/queue.h"
+#include "driver/uart.h"
+
 #include <BlynkSimpleEsp32.h>
+
 #include "com.h"
 #include "queue.h"
 #include "message.h"
@@ -18,11 +25,13 @@
 #define TEMP_VPIN V2
 #define HUMI_VPIN V3
 #define LED_VPIN V4
-#define MOTOR_VPIN V7
+#define MOTOR_VPIN V5
+#define SIREN_VPIN V6
 #define AUTO_PIN V8
+#
 
-char ssid[] = "iPhone";
-char pass[] = "68686868";
+char ssid[] = "P 504";
+char pass[] = "12345679";
 
 device_manager device;
 
@@ -30,12 +39,22 @@ FrameQueue txQueue;
 
 BlynkTimer timer;
 
+QueueHandle_t command_queue;
+typedef struct
+{
+    ID_t type; // Loại thiết bị (LED, MOTOR, SIREN, AUTO)
+    float value; 
+} command_t;
+
 void initBlynk(void);
 void updateBlynkData(void);
+void command_handler_task(void *param);
 
-void initBlynk()
+void initBlynk(void)
 {
     Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);
+    command_queue = xQueueCreate(10, sizeof(command_t));
+    xTaskCreate(command_handler_task, "command_handler", 2048, NULL, 9, NULL);
 }
 
 void setup()
@@ -47,10 +66,8 @@ void setup()
     // Khởi tạo kết nối UART và Blynk
     COM_Init();
     initBlynk();
-    Serial.println("Connecting successfully!");
 
-    pinMode(LED_PIN, OUTPUT);
-    digitalWrite(LED_PIN, LOW); // Tắt LED ban đầu
+    Serial.println("Connecting successfully!");
 
     timer.setInterval(3000L, updateBlynkData);
 }
@@ -60,8 +77,7 @@ void loop()
     Blynk.run();
     timer.run();
 
-    Transsmit_Handler(txQueue);
-    Receive_Handler(device, txQueue);
+    delay(100);
 }
 
 void updateBlynkData()
@@ -75,73 +91,65 @@ void updateBlynkData()
     Blynk.virtualWrite(AUTO_PIN, device.getAutoMode());
 }
 
+void command_handler_task(void *param)
+{
+    command_t cmd;
+    while (1)
+    {
+        if (xQueueReceive(command_queue, &cmd, portMAX_DELAY))
+        {
+            // Cập nhật trạng thái thiết bị
+            switch (cmd.type)
+            {
+            case LED:
+                device.setLEDStatus(cmd.value);
+                break;
+            case MOTOR:
+                device.setMotorSpeed(cmd.value);
+                break;
+            case SIREN:
+                device.setSirenStatus(cmd.value);
+                break;
+            case AUTO:
+                device.setAutoMode(cmd.value);
+                break;
+            default:
+                break;
+            }
+
+            // Tạo frame gửi UART
+            message_t message;
+            Create_Message_COMMAND(cmd.type, cmd.value, message);
+
+            // Đẩy vào hàng đợi txQueue
+            if (!full(&txQueue))
+            {
+                push(&txQueue, message, 10);
+            }
+        }
+    }
+}
+
 BLYNK_WRITE(LED_VPIN)
 {
-    int value = param.asInt();
-    device.setMotorSpeed(value);
-    
-    frame_message_t message;
-    Create_Message_COMMAND(LED, (float)value, message);
-    if(!full(&txQueue))
-    {
-        if (push(&txQueue, message, 10))
-        {
-            //TODO
-        }
-    } 
+    command_t cmd = {.type = LED, .value = param.asInt()};
+    xQueueSend(command_queue, &cmd, 0); // Không chặn
 }
 
 BLYNK_WRITE(MOTOR_VPIN)
 {
-    int value = param.asInt();
-    device.setMotorSpeed(value);
-    
-    frame_message_t message;
-    Create_Message_COMMAND(MOTOR, (float)value, message);
-    if(!full(&txQueue))
-    {
-        if (push(&txQueue, message, 10))
-        {
-            //TODO
-        }
-    } 
+    command_t cmd = {.type = MOTOR, .value = param.asInt()};
+    xQueueSend(command_queue, &cmd, 0);
 }
 
 BLYNK_WRITE(SIREN_VPIN)
 {
-    int value = param.asInt();
-    device.setMotorSpeed(value);
-
-    frame_message_t message;
-    Create_Message_COMMAND(SIREN, (float)value, message);
-    if(!full(&txQueue))
-    {
-        if (push(&txQueue, message, 10))
-        {
-            //TODO
-        }
-    } 
+    command_t cmd = {.type = SIREN, .value = param.asInt()};
+    xQueueSend(command_queue, &cmd, 0);
 }
 
 BLYNK_WRITE(AUTO_PIN)
 {
-    int value = param.asInt();
-    device.setMotorSpeed(value);
-    
-    frame_message_t message;
-    Create_Message_COMMAND(AUTO, (float)value, message);
-    if(!full(&txQueue))
-    {
-        if (push(&txQueue, message, 10))
-        {
-            if(value == 1)
-            {
-                Serial.println("Auto mode enabled");
-            }
-            else
-            {
-                Serial.println("Auto mode disabled");
-            }
-        }
-    }
+    command_t cmd = {.type = AUTO, .value = param.asInt()};
+    xQueueSend(command_queue, &cmd, 0);
 }

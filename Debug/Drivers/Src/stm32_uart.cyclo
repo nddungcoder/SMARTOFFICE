@@ -1,3 +1,9 @@
-../Drivers/Src/stm32_uart.c:5:19:UART_Init	4
-../Drivers/Src/stm32_uart.c:29:19:UART_Transmit	9
-../Drivers/Src/stm32_uart.c:50:19:UART_Receive	7
+C:/Users/nguye/STM32CubeIDE/workspace_1.17.0/SMARTOFFICE/Drivers/CMSIS/Include/core_cm3.h:1511:22:__NVIC_EnableIRQ	2
+C:/Users/nguye/STM32CubeIDE/workspace_1.17.0/SMARTOFFICE/Drivers/CMSIS/Include/core_cm3.h:1639:22:__NVIC_SetPriority	2
+../Drivers/Src/stm32_uart.c:9:15:UART_Init	6
+../Drivers/Src/stm32_uart.c:84:15:UART_Transmit	9
+../Drivers/Src/stm32_uart.c:111:15:UART_Receive	7
+../Drivers/Src/stm32_uart.c:131:6:UART_IRQHandler	10
+../Drivers/Src/stm32_uart.c:166:22:UART_Receive_IT	8
+../Drivers/Src/stm32_uart.c:211:22:UART_Transmit_IT	5
+../Drivers/Src/stm32_uart.c:247:13:UART_RxCpltCallback	1

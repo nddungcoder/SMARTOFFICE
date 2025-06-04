@@ -1,0 +1,5 @@
+../Sevice/Src/Output/siren.c:15:6:Siren_Init	1
+../Sevice/Src/Output/siren.c:25:6:Siren_On	1
+../Sevice/Src/Output/siren.c:30:6:Siren_Off	1
+../Sevice/Src/Output/siren.c:35:6:Siren_Toggle	1
+../Sevice/Src/Output/siren.c:40:6:Siren_Beep	1

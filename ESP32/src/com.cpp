@@ -1,8 +1,24 @@
 #include "com.h"
-#include "fsm_trans.h"
 
-frame_message_t message;
-uint8_t uart_buffer[FRAME_MAX_SIZE]; // Bộ đệm để lưu trữ dữ liệu nhận từ UART
+#include "device_manager.h"
+#include "driver/uart.h"
+#include "freertos/queue.h"
+#include "message.h"
+#include "device_manager.h"
+
+#define UART_NUM UART_NUM_1
+#define UART_RX 16
+#define UART_TX 17
+#define BUF_SIZE 1024
+
+static QueueHandle_t uart_queue;
+
+extern device_manager device;
+
+extern FrameQueue txQueue;
+
+static message_t message;
+uint8_t uart_buffer[FRAME_SIZE]; // Bộ đệm để lưu trữ dữ liệu nhận từ UART
 
 /**
  * @brief Khởi tạo giao tiếp UART với tốc độ baud mặc định.
@@ -11,77 +27,89 @@ uint8_t uart_buffer[FRAME_MAX_SIZE]; // Bộ đệm để lưu trữ dữ liệu
  */
 void COM_Init(uint32_t baud_rate)
 {
-    Serial1.begin(baud_rate, SERIAL_8N1, 16, 17); // UART1 RX/TX
-}
-
-/**
- * @brief Xử lý gói tin UART và cập nhật giá trị thiết bị.
- * @param device Tham chiếu đến đối tượng quản lý thiết bị
- */
-
-void COM_Send_Data(const uint8_t *data, uint8_t length)
-{
-    for (uint8_t i = 0; i < length; i++)
+    // Tạo hàng đợi UART event (nếu bạn dùng event, nhưng đang NULL ở dưới → chưa cần thiết nếu chỉ dùng polling/interrupt)
+    uart_queue = xQueueCreate(20, sizeof(uart_event_t));
+    if (uart_queue == NULL)
     {
-        Serial1.write(data[i]);
+        Serial.println("Failed to create UART queue");
+        return;
     }
+
+    // Cấu hình UART
+    uart_config_t uart_config = {
+        .baud_rate = (int)baud_rate,
+        .data_bits = UART_DATA_8_BITS,
+        .parity = UART_PARITY_DISABLE,
+        .stop_bits = UART_STOP_BITS_1,
+        .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
+        .source_clk = UART_SCLK_APB,
+    };
+
+    uart_param_config(UART_NUM, &uart_config);
+    uart_set_pin(UART_NUM, UART_TX, UART_RX, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
+
+    uart_driver_install(UART_NUM, BUF_SIZE * 2, 0, 20, &uart_queue, 0);
+
+    xTaskCreate(uart_event_task, "uart_event_task", 4096, NULL, 12, NULL); // Priority 12 cho task xử lý sự kiện UART
+
+    xTaskCreate(uart_tx_task, "uart_tx_task", 2048, NULL, 10, NULL); // Priority 10 cho task gửi dữ liệu qua UART
 }
 
-void Receive_Handler(device_manager &device, FrameQueue &queue)
+void uart_event_task(void *pvParameters)
 {
+    uart_event_t event;
+    uint8_t data[BUF_SIZE];
 
-    while (Serial1.available())
+    while (1)
     {
-        uint8_t rx = Serial1.read();
-        Fsm_Get_Message(rx, uart_buffer);
-
-        if (Check_Fsm_Flag_New_Message())
+        if (xQueueReceive(uart_queue, &event, portMAX_DELAY))
         {
-            if (!Message_Decode(uart_buffer, &message))
+            if (event.type == UART_DATA)
             {
-                Clear_All_State_Fsm();
-                return;
-            }
+                int len = uart_read_bytes(UART_NUM, data, event.size, portMAX_DELAY);
 
-            if (message.header[0] == NOTIFY)
-            {
-                COM_HandleNotifyMessage(device);
+                for (int i = 0; i < len; i++)
+                {
+                    Fsm_Get_Message(data[i], uart_buffer);
+
+                    if (Check_Fsm_Flag_New_Message())
+                    {
+                        if (Message_Decode(uart_buffer, &message))
+                        {
+                            if (message.header[0] == NOTIFY)
+                            {
+                                COM_HandleNotifyMessage(device);
+                            }
+                            else if (message.header[0] == RESPONSE)
+                            {
+                                COM_HandleResponseMessage(txQueue);
+                            }
+                        }
+
+                        Clear_All_State_Fsm();
+                    }
+                }
             }
-            else if (message.header[0] == RESPONSE)
-            {
-                COM_HandleResponseMessage(queue);
-                return; // Kết thúc hàm sớm để xử lý phản hồi
-            }
-            Clear_All_State_Fsm();
         }
     }
 }
 
-void Transsmit_Handler(FrameQueue &queue)
+void uart_tx_task(void *param)
 {
-    if (empty(&queue) || Get_Slave_State() == RESPONSE_BUSY)
+    while (1)
     {
-        return; // Không có dữ liệu để gửi
-    }
-
-    frame_message_t *sendmessage = front(&queue);
-
-    switch (Frame_To_Trans())
-    {
-    case TRANS_STATE_START:
-        COM_Send_Data(&sendmessage->start, 1); // Gửi byte START
-        break;
-    case TRANS_STATE_HEADER:
-        COM_Send_Data(sendmessage->header, HEADER_SIZE); // Gửi header (group, id, length)
-        break;
-    case TRANS_STATE_PAYLOAD:
-        COM_Send_Data(sendmessage->payload, sendmessage->header[2]); // Gửi payload
-        break;
-    case TRANS_STATE_CHECKSUM:
-        uint8_t* checksum = Convert_Uint16_To_Bytes(sendmessage->checksum);
-        
-        COM_Send_Data(checksum, CHECKSUM_SIZE); // Gửi checksum
-        break;
+        if (!empty(&txQueue))
+        {
+            Message_Convert_t mes = front(&txQueue);
+            if (mes.data != NULL)
+            {
+                Serial.print("Sending frame: ");
+                // Gửi frame qua UART
+                uart_write_bytes(UART_NUM, (const char *)mes.data, FRAME_SIZE);
+                pop(&txQueue);
+            }
+        }
+        vTaskDelay(10 / portTICK_PERIOD_MS); // Tạm nghỉ, tránh chiếm CPU
     }
 }
 
@@ -148,15 +176,11 @@ void COM_HandleNotifyMessage(device_manager &device)
 
 void COM_HandleResponseMessage(FrameQueue &queue)
 {
-    
     if (!empty(&queue))
     {
-        frame_message_t *sendmessage = front(&queue);
-        Fsm_Trans_Message((RESPONSE_t)message.payload[0], sendmessage);
-    }
-
-    if (Check_Flag_Trans_New_Message())
-    {
-        pop(&queue);
+        if (message.payload[0] == RESPONSE_ACK)
+        {
+            pop(&queue);
+        }
     }
 }

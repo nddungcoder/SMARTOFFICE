@@ -14,8 +14,10 @@ RM := rm -rf
 -include Sevice/Src/Output/subdir.mk
 -include Sevice/Src/Input/subdir.mk
 -include Sevice/Src/Com/subdir.mk
+-include Sevice/Src/subdir.mk
 -include Drivers/Src/subdir.mk
 -include Core/Src/subdir.mk
+-include App/Src/subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)

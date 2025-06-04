@@ -6,20 +6,18 @@
 
 #define START_BYTE 0xAA
 #define HEADER_SIZE 3
-#define MAX_PAYLOAD_SIZE 12
+#define PAYLOAD_SIZE 12
 #define CHECKSUM_SIZE 2
-#define FRAME_OVERHEAD (1 + HEADER_SIZE + CHECKSUM_SIZE)
-#define FRAME_MAX_SIZE (FRAME_OVERHEAD + MAX_PAYLOAD_SIZE)
+#define FRAME_SIZE 10
 
 // Cấu trúc frame dữ liệu
 typedef struct
 {
-    uint8_t start;                     // 1 byte: START_BYTE = 0xAA
-    uint8_t header[HEADER_SIZE];       // 3 byte: GROUP (1Byte) + ID (1Byte) + Length(1Byte)
-    uint8_t payload[MAX_PAYLOAD_SIZE]; // N byte: dữ liệu
-    uint16_t checksum;                 // 2 byte: CRC hoặc tổng kiểm tra
-} frame_message_t;
-
+    uint8_t start;                 // 1 byte: START_BYTE = 0xAA
+    uint8_t header[HEADER_SIZE];   // 3 byte: GROUP (1Byte) + ID (1Byte) + Length(1Byte)
+    uint8_t payload[PAYLOAD_SIZE]; // N byte: dữ liệu
+    uint16_t checksum;
+} message_t;
 
 typedef enum
 {
@@ -52,7 +50,6 @@ typedef enum
 
 // ==== Prototype của các hàm xử lý frame ====
 
-
 /**
  * @brief Tạo gói tin dạng COMMAND từ một giá trị float và ID thiết bị.
  *
@@ -66,7 +63,7 @@ typedef enum
  *
  * @return Số byte của gói tin đã tạo (độ dài thực tế của frame).
  */
-void Create_Message_COMMAND(ID_t id, float value, frame_message_t messageout);
+void Create_Message_COMMAND(ID_t id, float value, message_t messageout);
 
 /**
  * @brief Tạo frame dữ liệu phản hồi
@@ -82,7 +79,7 @@ uint8_t Create_Message_RESPONSE(ID_t id, RESPONSE_t r, uint8_t *dataout);
  * @param frame_out: nơi lưu kết quả
  * @return true nếu hợp lệ
  */
-bool Message_Decode(const uint8_t *buffer, frame_message_t *dataout);
+bool Message_Decode(const uint8_t *buffer, message_t *dataout);
 
 /**
  * @brief Tính tổng kiểm tra

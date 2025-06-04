@@ -1,6 +1,8 @@
 C:/Users/nguye/STM32CubeIDE/workspace_1.17.0/SMARTOFFICE/Drivers/CMSIS/Include/core_cm3.h:1511:22:__NVIC_EnableIRQ	2
-../tools/Src/timer_base.c:11:6:Timer2_Init	1
-../tools/Src/timer_base.c:33:6:TIM2_IRQHandler	2
-../tools/Src/timer_base.c:47:10:millis	1
-../tools/Src/timer_base.c:63:6:Delay_us	2
-../tools/Src/timer_base.c:75:6:Delay_ms	2
+C:/Users/nguye/STM32CubeIDE/workspace_1.17.0/SMARTOFFICE/Drivers/CMSIS/Include/core_cm3.h:1639:22:__NVIC_SetPriority	2
+../tools/Src/timer_base.c:7:6:Timer_Init	1
+../tools/Src/timer_base.c:32:6:IncTick	1
+../tools/Src/timer_base.c:37:10:GetTick	1
+../tools/Src/timer_base.c:42:6:Delay_ms	2
+../tools/Src/timer_base.c:48:6:Delay_us	2
+../tools/Src/timer_base.c:56:6:TIM2_IRQHandler	2

@@ -71,10 +71,10 @@ typedef struct __ADC_HandleTypeDef {
 #define ADC_SAMPLETIME_71CYCLES_5 ((uint32_t)(ADC_SMPR2_SMP0_2 | ADC_SMPR2_SMP0_1))
 
 /* ADC Functions */
-HAL_StatusTypeDef ADC_Init(ADC_HandleTypeDef* hadc);
-HAL_StatusTypeDef ADC_ConfigChannel(ADC_HandleTypeDef* hadc, ADC_ChannelConfTypeDef* sConfig);
-HAL_StatusTypeDef ADC_Start(ADC_HandleTypeDef* hadc);
-HAL_StatusTypeDef HAL_ADC_PollForConversion(ADC_HandleTypeDef* hadc, uint32_t Timeout);
+StatusTypeDef ADC_Init(ADC_HandleTypeDef* hadc);
+StatusTypeDef ADC_ConfigChannel(ADC_HandleTypeDef* hadc, ADC_ChannelConfTypeDef* sConfig);
+StatusTypeDef ADC_Start(ADC_HandleTypeDef* hadc);
+StatusTypeDef ADC_PollForConversion(ADC_HandleTypeDef* hadc, uint32_t Timeout);
 uint32_t ADC_GetValue(ADC_HandleTypeDef* hadc);
 
 #ifdef __cplusplus

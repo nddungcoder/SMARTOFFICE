@@ -1,0 +1,5 @@
+../Sevice/Src/Output/led_rgb.c:27:6:LED_RGB_Init	1
+../Sevice/Src/Output/led_rgb.c:69:6:LED_RGB_Set	1
+../Sevice/Src/Output/led_rgb.c:78:6:LED_RGB_Off	1
+../Sevice/Src/Output/led_rgb.c:85:6:LED_RGB_Get	1
+../Sevice/Src/Output/led_rgb.c:95:6:LED_RGB_SetState	2

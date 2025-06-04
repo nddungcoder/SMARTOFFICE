@@ -16,6 +16,7 @@
 extern "C" {
 #endif
 
+
 /**
  * @brief  Khởi tạo USART1 với tốc độ baud được chỉ định.
  * @param  baud_rate: tốc độ baud (ví dụ: 9600, 115200)
@@ -58,6 +59,11 @@ void USART1_Send_Float(float num);
  * @param  num: giá trị 8-bit cần gửi
  */
 void USART1_Send_Hex(uint8_t num);
+
+
+StatusTypeDef DUNGX_UART_Receive_IT(UART_HandleTypeDef *huart, const uint8_t *pData, uint8_t Size);
+StatusTypeDef DUNGX_UART_Transmit_IT(UART_HandleTypeDef *huart, const uint8_t *pData, uint8_t Size);
+
 
 #ifdef __cplusplus
 }

@@ -2,10 +2,10 @@
 
 #include "stm32_adc.h"
 
-HAL_StatusTypeDef ADC_Init(ADC_HandleTypeDef* hadc)
+StatusTypeDef ADC_Init(ADC_HandleTypeDef* hadc)
 {
     if (hadc == NULL || hadc->Instance != ADC1) {
-        return HAL_ERROR;
+        return DUNGX_ERROR;
     }
 
     // Enable ADC1 clock
@@ -44,13 +44,13 @@ HAL_StatusTypeDef ADC_Init(ADC_HandleTypeDef* hadc)
     hadc->Instance->CR2 |= ADC_CR2_CAL;
     while (hadc->Instance->CR2 & ADC_CR2_CAL);
 
-    return HAL_OK;
+    return DUNGX_OK;
 }
 
-HAL_StatusTypeDef ADC_ConfigChannel(ADC_HandleTypeDef* hadc, ADC_ChannelConfTypeDef* sConfig)
+StatusTypeDef ADC_ConfigChannel(ADC_HandleTypeDef* hadc, ADC_ChannelConfTypeDef* sConfig)
 {
     if (hadc == NULL || sConfig == NULL) {
-        return HAL_ERROR;
+        return DUNGX_ERROR;
     }
 
     // Configure channel rank in regular sequence
@@ -61,33 +61,33 @@ HAL_StatusTypeDef ADC_ConfigChannel(ADC_HandleTypeDef* hadc, ADC_ChannelConfType
     hadc->Instance->SMPR2 &= ~ADC_SMPR2_SMP0;
     hadc->Instance->SMPR2 |= sConfig->SamplingTime;
 
-    return HAL_OK;
+    return DUNGX_OK;
 }
 
-HAL_StatusTypeDef ADC_Start(ADC_HandleTypeDef* hadc)
+StatusTypeDef ADC_Start(ADC_HandleTypeDef* hadc)
 {
     if (hadc == NULL) {
-        return HAL_ERROR;
+        return DUNGX_ERROR;
     }
 
     // Start conversion
     hadc->Instance->CR2 |= ADC_CR2_ADON;  // First write to ADON turns ADC on
     hadc->Instance->CR2 |= ADC_CR2_ADON;  // Second write starts conversion
 
-    return HAL_OK;
+    return DUNGX_OK;
 }
 
-HAL_StatusTypeDef HAL_ADC_PollForConversion(ADC_HandleTypeDef* hadc, uint32_t Timeout)
+StatusTypeDef ADC_PollForConversion(ADC_HandleTypeDef* hadc, uint32_t Timeout)
 {
     if (hadc == NULL) {
-        return HAL_ERROR;
+        return DUNGX_ERROR;
     }
 
     while (!(hadc->Instance->SR & ADC_SR_EOC)) {
-        if (Timeout-- == 0) return HAL_TIMEOUT;
+        if (Timeout-- == 0) return DUNGX_TIMEOUT;
     }
 
-    return HAL_OK;
+    return DUNGX_OK;
 }
 
 uint32_t ADC_GetValue(ADC_HandleTypeDef* hadc)

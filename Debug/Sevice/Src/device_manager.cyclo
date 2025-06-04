@@ -1,0 +1,3 @@
+../Sevice/Src/device_manager.c:12:6:device_init	1
+../Sevice/Src/device_manager.c:35:6:READ_Sensor	2
+../Sevice/Src/device_manager.c:52:6:Notify_SendMessage	1

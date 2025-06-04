@@ -1,5 +1,6 @@
-../Drivers/Src/stm32_tim.c:5:19:TIM_Base_Init	16	static
-../Drivers/Src/stm32_tim.c:21:19:TIM_PWM_Init	16	static
-../Drivers/Src/stm32_tim.c:26:19:TIM_PWM_ConfigChannel	24	static
-../Drivers/Src/stm32_tim.c:68:19:TIM_PWM_Start	16	static
-../Drivers/Src/stm32_tim.c:81:19:TIM_PWM_Stop	16	static
+../Drivers/Src/stm32_tim.c:5:15:TIM_Base_Init	16	static
+../Drivers/Src/stm32_tim.c:25:15:TIM_PWM_Init	16	static
+../Drivers/Src/stm32_tim.c:30:15:TIM_PWM_ConfigChannel	24	static
+../Drivers/Src/stm32_tim.c:83:15:TIM_PWM_Start	16	static
+../Drivers/Src/stm32_tim.c:106:15:TIM_PWM_Stop	16	static
+../Drivers/Src/stm32_tim.c:129:6:TIM_SetCompare	24	static
