@@ -1,13 +1,14 @@
 #include "app_main.h"
 #include "stm32f1xx.h"
 #include "uart.h"
-#include "cds.h"
 #include "message.h"
 #include "queue.h"
 #include "auto_mode.h"
 #include "manual_mode.h"
 #include "device_manager.h"
 #include "timer_base.h"
+
+#include "motor.h"
 
 UART_HandleTypeDef huart1;
 FrameQueue g_uartQueue;
@@ -58,35 +59,24 @@ void SystemClock_Config(void)
 void App_Init(void)
 {
     SystemClock_Config();
-    USART1_Init(9600);
+    USART1_Init(115200);
     Timer_Init();
     Queue_init(&g_uartQueue);
     device_init();
-
-    // //Debugging LED on PA5
-    // RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
-
-    // GPIOA->CRL &= ~(GPIO_CRL_MODE5 | GPIO_CRL_CNF5);     
-    // GPIOA->CRL |= (GPIO_CRL_MODE5_1 | GPIO_CRL_MODE5_0); 
-    // GPIOA->CRL |= (0b00 << 22);                          
-
-    
-
-    DUNGX_UART_Receive_IT(&huart1, uart_rx_buffer, 1);
+    DUNGX_UART_Receive_IT(&huart1, uart_rx_buffer, 2);
 }
 
 void App_Loop(void)
 {
-    READ_Sensor();
-    Notify_SendMessage();
+     DeviceManager_UpdateData();
     if (sys.mode == AUTO_MODE)
     {
+
         Auto_Process();
     }
     else if (sys.mode == MANUAL_MODE)
     {
         Manual_Process();
     }
-    
-    Delay_ms(500);
+
 }

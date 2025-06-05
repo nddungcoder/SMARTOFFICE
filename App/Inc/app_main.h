@@ -8,8 +8,8 @@
  * MANUAL_MODE: Vận hành thủ công theo điều khiển từ người dùng.
  */
 typedef enum {
-    AUTO_MODE = 0,   ///< Chế độ tự động
-    MANUAL_MODE = 1  ///< Chế độ thủ công
+    AUTO_MODE = 0,   
+    MANUAL_MODE = 1  
 } MODE;
 
 /**
@@ -24,7 +24,6 @@ typedef struct {
     float gas_level;       ///< Mức khí gas từ MQ2
     float lux;             ///< Mức ánh sáng từ LDR
 
-    float led_r, led_g, led_b; ///< Giá trị màu RGB của LED
     float led_state;           ///< Trạng thái bật/tắt LED (1: bật, 0: tắt)
 
     float motor_level;     ///< Mức độ hoạt động của motor (0–100%)

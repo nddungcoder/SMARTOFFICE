@@ -22,17 +22,15 @@ void Manual_Process(void)
             switch (message->header[1])
             {
             case LED:
-                // Thiết lập màu LED RGB
                 sys.led_state = Convert_Bytes_To_Float(message->payload[0], message->payload[1], message->payload[2], message->payload[3]);
                 LED_RGB_SetState(sys.led_state);
                 break;
             case MOTOR:
-                // Thiết lập tốc độ và hướng của motor
                 sys.motor_level = Convert_Bytes_To_Float(message->payload[0], message->payload[1], message->payload[2], message->payload[3]);
-                Mototr_SetLevel((uint8_t)sys.motor_level);
+                Motor_SetLevel(sys.motor_level);
+
                 break;
             case SIREN:
-                // Bật/tắt còi
                 sys.siren_on = Convert_Bytes_To_Float(message->payload[0], message->payload[1], message->payload[2], message->payload[3]);
                 if (sys.siren_on > 0)
                 {
@@ -44,15 +42,11 @@ void Manual_Process(void)
                 }
                 break;
             case AUTO:
-                sys.mode = (MODE)Convert_Bytes_To_Int(message->payload[0], message->payload[1], message->payload[2], message->payload[3]);
+                sys.mode = Convert_Bytes_To_Float(message->payload[0], message->payload[1], message->payload[2], message->payload[3]);
                 // TODO
-                break;
-            default:
-                // Gói tin không hợp lệ, có thể ghi log hoặc thông báo lỗi
                 break;
             }
         }
-        // Xóa gói tin đã xử lý khỏi hàng đợi
         pop(&g_uartQueue);
     }
 }

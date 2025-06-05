@@ -19,11 +19,15 @@ int size(const FrameQueue *q) {
     return q->size;
 }
 
-bool push(FrameQueue *q, const message_t frame, uint8_t length) {
+bool push(FrameQueue *q, const message_t *frame, uint8_t length)
+{
     if (full(q)) return false;
+    if (frame == NULL) return false;
 
-    q->buffer[q->rear].frame = frame; // copy kiểu struct đơn giản
     q->rear = (q->rear + 1) % FRAME_QUEUE_CAPACITY;
+
+    q->buffer[q->rear].frame = *frame;
+
     q->size++;
     return true;
 }
@@ -36,17 +40,19 @@ bool pop(FrameQueue *q) {
     return true;
 }
 
-Message_Convert_t front(const FrameQueue *q) {
-    Message_Convert_t dummy = {0}; // Trả về giá trị rỗng nếu hàng đợi trống
-    if (empty(q)) return dummy;
+bool front(FrameQueue *q, uint8_t *dest)
+{
+    if (q->size == 0 || dest == NULL) return false;
 
-    return q->buffer[q->front]; 
+    memcpy(dest, q->buffer[q->front].data, FRAME_SIZE);
+    return true;
 }
 
-Message_Convert_t back(const FrameQueue *q) {
-    Message_Convert_t dummy = {0}; // Trả về giá trị rỗng nếu hàng đợi trống
-    if (empty(q)) return dummy;
+bool back(FrameQueue *q, uint8_t *dest)
+{
+    if (q->size == 0 || dest == NULL) return false;
 
-    int index = (q->rear - 1 + FRAME_QUEUE_CAPACITY) % FRAME_QUEUE_CAPACITY;
-    return q->buffer[index]; // Trả bản sao phần tử cuối
+    int last_index = (q->rear == 0) ? (FRAME_QUEUE_CAPACITY - 1) : (q->rear - 1);
+    memcpy(dest, q->buffer[last_index].data, FRAME_SIZE);
+    return true;
 }

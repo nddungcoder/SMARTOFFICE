@@ -37,6 +37,6 @@ void Motor_Stop(void);
  *
  * @param state Trạng thái motor: 0 - Off, 1 - Low, 2 - Medium, 3 - High.
  */
-void Mototr_SetLevel(uint8_t level);
+void Motor_SetLevel(uint8_t level);
 
 #endif /* __MOTOR_H__ */

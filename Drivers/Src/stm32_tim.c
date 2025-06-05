@@ -8,8 +8,12 @@ StatusTypeDef TIM_Base_Init(TIM_HandleTypeDef *htim)
         return DUNGX_ERROR;
 
     // Enable timer clock
-    if (htim->Instance == TIM2)
+    if (htim->Instance == TIM1)
+        RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;
+    else if (htim->Instance == TIM2)
         RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+    else if (htim->Instance == TIM3)
+        RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
 
     // Cấu hình prescaler và ARR
     htim->Instance->PSC = htim->Init.Prescaler;
@@ -39,6 +43,8 @@ StatusTypeDef TIM_PWM_ConfigChannel(TIM_HandleTypeDef *htim, TIM_OC_InitTypeDef 
         htim->Instance->CCMR1 &= ~TIM_CCMR1_OC1M;
         htim->Instance->CCMR1 |= sConfig->OCMode;
         htim->Instance->CCR1 = sConfig->Pulse;
+
+        htim->Instance->CCMR1 |= TIM_CCMR1_OC1PE;
         if (sConfig->OCFastMode == TIM_OCFAST_DISABLE)
             htim->Instance->CCMR1 &= ~TIM_CCMR1_OC1FE;
         if (sConfig->OCPolarity == TIM_OCPOLARITY_LOW)
@@ -99,6 +105,13 @@ StatusTypeDef TIM_PWM_Start(TIM_HandleTypeDef *htim, uint32_t Channel)
     default:
         return DUNGX_ERROR;
     }
+
+    if (htim->Instance == TIM1)
+    {
+        htim->Instance->BDTR |= TIM_BDTR_MOE;
+        htim->Instance->CR1 |= TIM_CR1_ARPE; // Auto-reload preload enable
+    }
+
     TIM_ENABLE(htim);
     return DUNGX_OK;
 }

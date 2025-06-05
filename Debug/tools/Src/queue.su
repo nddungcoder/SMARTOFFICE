@@ -2,7 +2,7 @@
 ../tools/Src/queue.c:10:6:empty	16	static
 ../tools/Src/queue.c:14:6:full	16	static
 ../tools/Src/queue.c:18:5:size	16	static
-../tools/Src/queue.c:22:6:push	16	static
+../tools/Src/queue.c:22:6:push	24	static
 ../tools/Src/queue.c:31:6:pop	16	static
 ../tools/Src/queue.c:39:12:front	16	static
 ../tools/Src/queue.c:44:12:back	16	static

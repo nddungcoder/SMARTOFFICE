@@ -18,7 +18,7 @@ extern device_manager device;
 extern FrameQueue txQueue;
 
 static message_t message;
-uint8_t uart_buffer[FRAME_SIZE]; // Bộ đệm để lưu trữ dữ liệu nhận từ UART
+uint8_t uart_buffer[FRAME_SIZE]; 
 
 /**
  * @brief Khởi tạo giao tiếp UART với tốc độ baud mặc định.
@@ -113,58 +113,59 @@ void uart_tx_task(void *param)
         case WAITING_TO_SEND:
             if (!empty(&txQueue))
             {
-                Message_Convert_t mes = front(&txQueue);
-                if (mes.data != NULL)
+                uint8_t data[FRAME_SIZE];
+                front(&txQueue, data);
+                
+                if (data != NULL)
                 {
-                    uart_write_bytes(UART_NUM, (const char *)mes.data, FRAME_SIZE);
-                    
+                    uart_write_bytes(UART_NUM, data, FRAME_SIZE);
                     tx_state = WAITING_FOR_RESPONSE;
                     last_sent_time = millis();
-                    retry_count = 0;
                 }
             }
             break;
 
         case WAITING_FOR_RESPONSE:
-            // Không xử lý gì ở đây, chỉ chờ phản hồi từ hàm COM_HandleResponseMessage()
-            // Timeout nếu quá 1000ms mà chưa được cập nhật ACK/NACK
-            if ((millis() - last_sent_time) > 1000)
+            // Timeout sau 1000ms nếu không nhận được phản hồi
+            if ((millis() - last_sent_time) > 50)
             {
-                Serial.println("Timeout khi chờ phản hồi, thử lại...");
+                Serial.println("Timeout khi chờ phản hồi.");
                 tx_state = RESPONSE_NACKED;
             }
             break;
 
         case RESPONSE_ACKED:
-            Serial.println("Nhận ACK, gửi tiếp frame tiếp theo.");
+            Serial.println("ACK nhận thành công. Gửi frame kế tiếp.");
             pop(&txQueue);
+            retry_count = 0;  // Reset khi đã gửi thành công
             tx_state = WAITING_TO_SEND;
             break;
 
         case RESPONSE_NACKED:
             retry_count++;
-            if (retry_count <= 3)
+            if (retry_count <= 5)
             {
-                Serial.print("Nhận NACK hoặc timeout, thử lại lần ");
-                Serial.println(retry_count);
-                tx_state = WAITING_TO_SEND; 
+                Serial.printf("NACK hoặc timeout, thử lại lần %d\n", retry_count);
+                tx_state = WAITING_TO_SEND;
             }
             else
             {
-                Serial.println("Gửi thất bại sau 3 lần. Bỏ qua frame.");
+                Serial.println("Thất bại sau 3 lần. Bỏ qua frame.");
                 pop(&txQueue);
+                retry_count = 0;
                 tx_state = WAITING_TO_SEND;
             }
             break;
 
         default:
-            tx_state = WAITING_TO_SEND; 
+            tx_state = WAITING_TO_SEND;
             break;
         }
 
-        vTaskDelay(10 / portTICK_PERIOD_MS); // Tránh chiếm CPU
+        vTaskDelay(10 / portTICK_PERIOD_MS); // Nhường CPU
     }
 }
+
 
 void COM_HandleNotifyMessage(device_manager &device)
 {
@@ -223,6 +224,15 @@ void COM_HandleNotifyMessage(device_manager &device)
             // Serial.print(" ");
             // Serial.println(device.getSirenStatus());
             break;
+
+        case AUTO:
+            device.setAutoModeBytes(message.payload[0], message.payload[1], message.payload[2], message.payload[3]);
+
+            // Serial.print(String("AUTO "));
+            // Serial.print(" ");
+            // Serial.println(device.getAutoMode());
+            break;
+
         }
     }
 }

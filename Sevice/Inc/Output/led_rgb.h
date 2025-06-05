@@ -15,9 +15,8 @@ typedef enum
     LED_OFF = 0,
     LED_WHITE_50 = 1,  // trắng 50% (mờ)
     LED_WHITE_100 = 2, // trắng 100% (sáng)
-    LED_WARM_WHITE,    // vàng ngà (trắng hơi vàng)
-    LED_GREEN = 4,     // xanh lá cây
-    LED_RED = 5,       // đỏ
+    LED_GREEN = 3,     // xanh lá cây
+    LED_RED = 4,       // đỏ
 } LED_State_t;
 
 typedef struct

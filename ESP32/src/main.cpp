@@ -1,5 +1,5 @@
-#define BLYNK_TEMPLATE_ID "TMPL6-Osyi-Jt"
 #define BLYNK_TEMPLATE_NAME "SMARTOFFICE"
+#define BLYNK_TEMPLATE_ID "TMPL6-Osyi-Jt"
 #define BLYNK_AUTH_TOKEN "eGmKDjog9NDM3ZWJm2D64h_IKj4l_iLV"
 
 #include <Arduino.h>
@@ -43,7 +43,7 @@ QueueHandle_t command_queue;
 typedef struct
 {
     ID_t type; // Loại thiết bị (LED, MOTOR, SIREN, AUTO)
-    float value; 
+    float value;
 } command_t;
 
 void initBlynk(void);
@@ -64,7 +64,7 @@ void setup()
     Queue_init(&txQueue);
 
     // Khởi tạo kết nối UART và Blynk
-    COM_Init();
+    COM_Init(115200);
     initBlynk();
 
     Serial.println("Connecting successfully!");
@@ -80,15 +80,59 @@ void loop()
     delay(100);
 }
 
+#define EPSILON 0.01f  
+
+bool isDifferent(float a, float b) {
+    return fabs(a - b) > EPSILON;
+}
+
 void updateBlynkData()
 {
-    Blynk.virtualWrite(LUX_VPIN, device.getLdrLux());
-    Blynk.virtualWrite(GAS_VPIN, device.getGasPPM());
-    Blynk.virtualWrite(TEMP_VPIN, device.getDhtTemperature());
-    Blynk.virtualWrite(HUMI_VPIN, device.getDhtHumidity());
-    Blynk.virtualWrite(LED_VPIN, device.getLEDStatus());
-    Blynk.virtualWrite(MOTOR_VPIN, device.getMotorSpeed());
-    Blynk.virtualWrite(AUTO_PIN, device.getAutoMode());
+    static float last_lux = -1, last_gas = -1, last_temp = -1, last_humi = -1;
+    static float last_led = -1, last_motor = -1, last_auto = -1;
+
+    float lux = device.getLdrLux();
+    float gas = device.getGasPPM();
+    float temp = device.getDhtTemperature();
+    float humi = device.getDhtHumidity();
+    float led = device.getLEDStatus();
+    float motor = device.getMotorSpeed();
+    float autoMode = device.getAutoMode();
+
+    if (isDifferent(lux, last_lux)) {
+        Blynk.virtualWrite(LUX_VPIN, lux);
+        last_lux = lux;
+    }
+
+    if (isDifferent(gas, last_gas)) {
+        Blynk.virtualWrite(GAS_VPIN, gas);
+        last_gas = gas;
+    }
+
+    if (isDifferent(temp, last_temp)) {
+        Blynk.virtualWrite(TEMP_VPIN, temp);
+        last_temp = temp;
+    }
+
+    if (isDifferent(humi, last_humi)) {
+        Blynk.virtualWrite(HUMI_VPIN, humi);
+        last_humi = humi;
+    }
+
+    if (isDifferent(led, last_led)) {
+        Blynk.virtualWrite(LED_VPIN, led);
+        last_led = led;
+    }
+
+    if (isDifferent(motor, last_motor)) {
+        Blynk.virtualWrite(MOTOR_VPIN, motor);
+        last_motor = motor;
+    }
+
+    if (isDifferent(autoMode, last_auto)) {
+        Blynk.virtualWrite(AUTO_PIN, autoMode);
+        last_auto = autoMode;
+    }
 }
 
 void command_handler_task(void *param)
@@ -119,15 +163,29 @@ void command_handler_task(void *param)
 
             // Tạo frame gửi UART
             message_t message;
-            Create_Message_COMMAND(cmd.type, cmd.value, message);
+            Create_Message_COMMAND(cmd.type, cmd.value, &message);
 
             // Đẩy vào hàng đợi txQueue
             if (!full(&txQueue))
             {
-                push(&txQueue, message, 10);
+                push(&txQueue, &message, 10);
             }
         }
     }
+}
+
+void resetBlynkWidgetsToDefault() {
+    Blynk.virtualWrite(LED_VPIN, 0);     
+    Blynk.virtualWrite(MOTOR_VPIN, 0);  
+    Blynk.virtualWrite(SIREN_VPIN, 0);   
+    Blynk.virtualWrite(AUTO_PIN, 0);     
+}
+
+BLYNK_CONNECTED()
+{
+    updateBlynkData();
+
+    resetBlynkWidgetsToDefault();
 }
 
 BLYNK_WRITE(LED_VPIN)

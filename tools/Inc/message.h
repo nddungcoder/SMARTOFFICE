@@ -6,7 +6,7 @@
 
 #define START_BYTE 0xAA
 #define HEADER_SIZE 3
-#define PAYLOAD_SIZE 12
+#define PAYLOAD_SIZE 4
 #define CHECKSUM_SIZE 2
 #define FRAME_SIZE 10
 

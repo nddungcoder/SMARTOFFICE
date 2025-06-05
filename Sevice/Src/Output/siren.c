@@ -9,7 +9,7 @@
 #include "stm32_gpio.h"
 #include "timer_base.h"
 
-#define SIREN_GPIO_PORT GPIOB
+#define SIREN_GPIO_PORT GPIOA
 #define SIREN_GPIO_PIN (1U << 3) // PA3
 
 void Siren_Init(void)
@@ -19,7 +19,7 @@ void Siren_Init(void)
         .Mode = GPIO_MODE_OUTPUT_PP,
         .Speed = GPIO_SPEED_HIGH};
     GPIO_Init(SIREN_GPIO_PORT, &gpio);
-    GPIO_WritePin(SIREN_GPIO_PORT, SIREN_GPIO_PIN, GPIO_PIN_RESET); // Ban đầu tắt
+    GPIO_WritePin(SIREN_GPIO_PORT, SIREN_GPIO_PIN, GPIO_PIN_RESET);
 }
 
 void Siren_On(void)
@@ -40,6 +40,6 @@ void Siren_Toggle(void)
 void Siren_Beep(uint32_t duration_ms)
 {
     Siren_On();
-    delay_ms(duration_ms);
+    Delay_ms(duration_ms);
     Siren_Off();
 }

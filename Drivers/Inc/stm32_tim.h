@@ -56,7 +56,7 @@ typedef struct __TIM_HandleTypeDef {
 #define TIM_CLOCKDIVISION_DIV1           ((uint32_t)0x00000000U)
 
 /* Output Compare Modes */
-#define TIM_OCMODE_PWM1                  ((uint32_t)0x00000006U)
+#define TIM_OCMODE_PWM1                  ((uint32_t)0x00000006U) << 4U
 
 /* Output Compare Polarity */
 #define TIM_OCPOLARITY_HIGH              ((uint32_t)0x00000000U)

@@ -129,11 +129,19 @@ extern "C"
 #define UART_CR2_REG_INDEX 2U
 #define UART_CR3_REG_INDEX 3U
 
-#define UART_ENABLE_IT(__HANDLE__, __INTERRUPT__) ((((__INTERRUPT__) >> 28U) == UART_CR1_REG_INDEX) ? ((__HANDLE__)->Instance->CR1 |= ((__INTERRUPT__) & UART_IT_MASK)) : (((__INTERRUPT__) >> 28U) == UART_CR2_REG_INDEX) ? ((__HANDLE__)->Instance->CR2 |= ((__INTERRUPT__) & UART_IT_MASK)) \
-                                                                                                                                                                                                                           : ((__HANDLE__)->Instance->CR3 |= ((__INTERRUPT__) & UART_IT_MASK)))
+#define UART_ENABLE_IT(__HANDLE__, __INTERRUPT__)                          \
+    ( (((__INTERRUPT__) >> 28U) == UART_CR1_REG_INDEX) ?                   \
+        ((__HANDLE__)->Instance->CR1 |= ((__INTERRUPT__) & UART_IT_MASK)) : \
+      (((__INTERRUPT__) >> 28U) == UART_CR2_REG_INDEX) ?                   \
+        ((__HANDLE__)->Instance->CR2 |= ((__INTERRUPT__) & UART_IT_MASK)) : \
+        ((__HANDLE__)->Instance->CR3 |= ((__INTERRUPT__) & UART_IT_MASK)) )
 
-#define UART_DISABLE_IT(__HANDLE__, __INTERRUPT__) ((((__INTERRUPT__) >> 28U) == UART_CR1_REG_INDEX) ? ((__HANDLE__)->Instance->CR1 &= ~((__INTERRUPT__) & UART_IT_MASK)) : (((__INTERRUPT__) >> 28U) == UART_CR2_REG_INDEX) ? ((__HANDLE__)->Instance->CR2 &= ~((__INTERRUPT__) & UART_IT_MASK)) \
-                                                                                                                                                                                                                             : ((__HANDLE__)->Instance->CR3 &= ~((__INTERRUPT__) & UART_IT_MASK)))
+#define UART_DISABLE_IT(__HANDLE__, __INTERRUPT__)                         \
+    ( (((__INTERRUPT__) >> 28U) == UART_CR1_REG_INDEX) ?                   \
+        ((__HANDLE__)->Instance->CR1 &= ~((__INTERRUPT__) & UART_IT_MASK)) : \
+      (((__INTERRUPT__) >> 28U) == UART_CR2_REG_INDEX) ?                   \
+        ((__HANDLE__)->Instance->CR2 &= ~((__INTERRUPT__) & UART_IT_MASK)) : \
+        ((__HANDLE__)->Instance->CR3 &= ~((__INTERRUPT__) & UART_IT_MASK)) )
 
   /* UART Exported Functions */
   StatusTypeDef UART_Init(UART_HandleTypeDef *huart);

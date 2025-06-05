@@ -43,7 +43,7 @@ void Motor_Init(void)
     // 4. Timer config
     htim1.Instance = TIM1;
     htim1.Init.Prescaler = 71; // 72MHz / (71+1) = 1MHz
-    htim1.Init.Period = 49;    // 1MHz / (49+1) = 20kHz PWM
+    htim1.Init.Period = 200;    // 1MHz / (49+1) = 20kHz PWM
     htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
     htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 
@@ -58,6 +58,7 @@ void Motor_Init(void)
 
     TIM_PWM_ConfigChannel(&htim1, &oc, TIM_CHANNEL_1);
     TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+
 }
 
 void Motor_SetSpeed(int8_t speed_percent)
@@ -88,7 +89,7 @@ void Motor_Stop(void){
     TIM_SetCompare(&htim1, MOTOR_PWM_CHANNEL, 0);
 }
 
-void Mototr_SetLevel(uint8_t state)
+void Motor_SetLevel(uint8_t state)
 {
     if (state == 0)
     {
@@ -99,11 +100,11 @@ void Mototr_SetLevel(uint8_t state)
     else if (state == 1)
     {
 
-        Motor_SetSpeed(25); // Low speed
+        Motor_SetSpeed(50); // Low speed
     }
     else if (state == 2)
     {
-        Motor_SetSpeed(50); // Medium speed
+        Motor_SetSpeed(75); // Medium speed
     }
     else if (state == 3)
     {

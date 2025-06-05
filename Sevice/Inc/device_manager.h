@@ -10,16 +10,12 @@
  */
 void device_init(void);
 
-/**
- * @brief Đọc toàn bộ dữ liệu hệ thống và gửi qua UART.
- * Bao gồm cảm biến, LED RGB, motor,...
- */
-void READ_Sensor(void);
 
 /**
- * @brief Gửi một thông báo.
+ * Cập nhật dữ liệu từ các cảm biến và thiết bị.
+ * Gửi lên hệ thống nếu có thay đổi.
  */
-void Notify_SendMessage(void);
+void DeviceManager_UpdateData(void);
 
 
 

@@ -19,7 +19,7 @@ typedef enum
  * @param message message_t dùng để lưu toàn bộ frame nếu nhận thành công.
  * @return Số byte sẽ nhận ở lần tiếp theo.
  */
-uint8_t Fsm_Get_Message(uint8_t datain[], uint8_t dataout[]);
+void Fsm_Get_Message(uint8_t datain, uint8_t dataout[]);
 
 /**
  * @brief Reset trạng thái FSM và các biến liên quan.

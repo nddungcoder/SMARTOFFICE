@@ -92,24 +92,8 @@ bool Message_Decode(const uint8_t *buffer, message_t *frame_out)
                                  (buffer[1 + HEADER_SIZE + payload_len + 1] << 8);
     uint16_t calc_checksum = Message_Calculate_Checksum(temp, HEADER_SIZE + payload_len);
 
-    if (received_checksum != calc_checksum)
-        return false;
+    // if (received_checksum != calc_checksum) return false;
 
     frame_out->checksum = received_checksum;
     return true;
-}
-
-bool Check_Frame_Header(const uint8_t headerframe[])
-{
-   if (headerframe[0] != COMMAND && headerframe[0] == RESPONSE && headerframe[0] == NOTIFY)
-       return false;
-   if (headerframe[1] != CDS && headerframe[1] != IR && headerframe[1] != MQ2 && headerframe[1] != DHT11_HUMI && headerframe[1] != DHT11_TEMP &&
-       headerframe[1] != LED && headerframe[1] != MOTOR && headerframe[1] != SIREN && headerframe[1] != AUTO && headerframe[1] != UNKNOWN)
-       return false;
-   if (headerframe[2] > PAYLOAD_SIZE)
-       return false; // Kiểm tra độ dài payload
-
-   return true;
-
-	
 }

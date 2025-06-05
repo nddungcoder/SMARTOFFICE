@@ -18,7 +18,6 @@ const RGB_Color_t led_color_table[] = {
     [LED_OFF]       = { 0,   0,   0   },
     [LED_WHITE_50]  = {127, 127, 127 },
     [LED_WHITE_100] = {255, 255, 255 },
-    [LED_WARM_WHITE]= {180, 140, 100 },
     [LED_GREEN]     = {0,   255, 0   },
     [LED_RED]       = {255, 0,   0   }
 };

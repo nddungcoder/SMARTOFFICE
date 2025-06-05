@@ -61,8 +61,8 @@ void USART1_Send_Float(float num);
 void USART1_Send_Hex(uint8_t num);
 
 
-StatusTypeDef DUNGX_UART_Receive_IT(UART_HandleTypeDef *huart, const uint8_t *pData, uint8_t Size);
-StatusTypeDef DUNGX_UART_Transmit_IT(UART_HandleTypeDef *huart, const uint8_t *pData, uint8_t Size);
+StatusTypeDef DUNGX_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint8_t Size);
+StatusTypeDef DUNGX_UART_Transmit_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint8_t Size);
 
 
 #ifdef __cplusplus

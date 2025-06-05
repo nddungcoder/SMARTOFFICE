@@ -99,7 +99,7 @@ void USART1_IRQHandler(void)
     UART_IRQHandler(&huart1);
 }
 
-StatusTypeDef DUNGX_UART_Receive_IT(UART_HandleTypeDef *huart, const uint8_t *pData, uint8_t Size)
+StatusTypeDef DUNGX_UART_Receive_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint8_t Size)
 {
 
     // Kiểm tra UART đã sẵn sàng nhận chưa
@@ -131,7 +131,7 @@ StatusTypeDef DUNGX_UART_Receive_IT(UART_HandleTypeDef *huart, const uint8_t *pD
     }
 }
 
-StatusTypeDef DUNGX_UART_Transmit_IT(UART_HandleTypeDef *huart, const uint8_t *pData, uint8_t Size)
+StatusTypeDef DUNGX_UART_Transmit_IT(UART_HandleTypeDef *huart, uint8_t *pData, uint8_t Size)
 {
     // Kiểm tra UART đã sẵn sàng gửi chưa
     if (huart->gState == UART_STATE_READY)

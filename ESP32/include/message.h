@@ -6,7 +6,7 @@
 
 #define START_BYTE 0xAA
 #define HEADER_SIZE 3
-#define PAYLOAD_SIZE 12
+#define PAYLOAD_SIZE 4
 #define CHECKSUM_SIZE 2
 #define FRAME_SIZE 10
 
@@ -63,7 +63,7 @@ typedef enum
  *
  * @return Số byte của gói tin đã tạo (độ dài thực tế của frame).
  */
-void Create_Message_COMMAND(ID_t id, float value, message_t messageout);
+void Create_Message_COMMAND(ID_t id, float value, message_t* messageout);
 
 /**
  * @brief Tạo frame dữ liệu phản hồi

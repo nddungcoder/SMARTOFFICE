@@ -32,113 +32,117 @@ void Clear_All_State_Fsm(void)
  * Nếu frame hợp lệ và đủ, dữ liệu sẽ được sao chép vào dataout và
  * FSM sẽ chuyển về trạng thái chờ frame mới.
  */
-uint8_t Fsm_Get_Message(uint8_t datain[], uint8_t dataout[])
+void Fsm_Get_Message(uint8_t datain, uint8_t dataout[])
 {
     if (flag_fsm_new_message)
-        return 1;
-    uint8_t length = 1;
+        return;
 
     switch (fsm_state)
     {
     case FSM_STATE_START:
 
-        dataout[0] = datain[0];
+        dataout[byte_count] = datain;
 
-        if (byte_count == 0 && datain[0] == START_BYTE)
+        if (byte_count == 0)
         {
-            // Nếu byte đầu tiên là START_BYTE, chuyển sang trạng thái HEADER
-            Clear_All_State_Fsm();
-            fsm_state = FSM_STATE_HEADER;
-            byte_count++;
-            length = HEADER_SIZE;
-        }
-        else
-        {
-            Clear_All_State_Fsm();
 
-            // NACK
-            uint8_t data[FRAME_SIZE];
-            uint8_t length = Create_Message_RESPONSE(UNKNOWN, RESPONSE_NACK, data);
-            USART1_Send_Data(data, length);
+            if (datain == START_BYTE)
+            {
+
+                Clear_All_State_Fsm();
+                fsm_state = FSM_STATE_HEADER;
+                byte_count++;
+            }
+            else
+            {
+                // Nếu byte nhận không phải START_BYTE, reset FSM
+                Clear_All_State_Fsm();
+            }
         }
         break;
 
     case FSM_STATE_HEADER:
-        if (byte_count == 1 && Check_Frame_Header(datain))
+        dataout[byte_count] = datain;
+        byte_count++;
+        // Check Group
+        if (byte_count == 2)
         {
-            GPIOA->ODR ^= (1 << 5);
-            for (int i = 0; i < HEADER_SIZE; i++)
+
+            if (datain != COMMAND)
             {
-                dataout[byte_count] = datain[i];
-                byte_count++;
+                Clear_All_State_Fsm();
             }
-            expected_payload_length = datain[2];
-
-            fsm_state = FSM_STATE_PAYLOAD;
-
-            length = expected_payload_length;
         }
-        else
+        else if (byte_count == 3)
         {
-            // NACK
-            uint8_t data[FRAME_SIZE];
-            uint8_t length = Create_Message_RESPONSE(dataout[2], RESPONSE_NACK, data);
-            USART1_Send_Data(data, length); // Gửi phản hồi NACK
+            // Check ID
+            if (dataout[2] != CDS && dataout[2] != IR && dataout[2] != MQ2 && dataout[2] != DHT11_HUMI && dataout[2] != DHT11_TEMP &&
+                dataout[2] != LED && dataout[2] != MOTOR && dataout[2] != SIREN && dataout[2] != AUTO && dataout[2] != UNKNOWN)
+            {
+
+                Clear_All_State_Fsm();
+            }
+        }
+        else if (byte_count == 4)
+        {
+            // Check Length
+            expected_payload_length = datain;
+            if (expected_payload_length > PAYLOAD_SIZE)
+            {
+                Clear_All_State_Fsm();
+            }
+            else
+            {
+
+                fsm_state = FSM_STATE_PAYLOAD;
+            }
         }
         break;
 
     case FSM_STATE_PAYLOAD:
-        if (byte_count == (1 + HEADER_SIZE))
+        dataout[byte_count] = datain;
+        byte_count++;
+        if (byte_count == 4 + expected_payload_length)
         {
-            for (int i = 0; i < 4; i++)
-            {
-                dataout[byte_count] = datain[i];
-                byte_count++;
-            }
-            fsm_state = FSM_STATE_CHECKSUM;
 
-            length = CHECKSUM_SIZE;
+            fsm_state = FSM_STATE_CHECKSUM;
         }
-        else
+        else if (byte_count - 4 > expected_payload_length)
         {
-            length = CHECKSUM_SIZE;
+            // Nếu nhận quá payload, reset FSM
             Clear_All_State_Fsm();
-            uint8_t data[FRAME_SIZE];
-            uint8_t length = Create_Message_RESPONSE(dataout[2], RESPONSE_NACK, data);
-            USART1_Send_Data(data, length); // Gửi phản hồi NACK
         }
         break;
 
     case FSM_STATE_CHECKSUM:
+        dataout[byte_count] = datain;
 
-        for (int i = 0; i < CHECKSUM_SIZE; i++)
+        byte_count++;
+
+        if (byte_count == 1 + HEADER_SIZE + expected_payload_length + CHECKSUM_SIZE)
         {
-            dataout[byte_count] = datain[i];
-            byte_count++;
-        }
 
-        uint16_t received_checksum = Convert_Bytes_To_Uint16(
-            dataout[byte_count - 2], dataout[byte_count - 1]);
+            uint16_t received_checksum = Convert_Bytes_To_Uint16(
+                dataout[byte_count - 2], dataout[byte_count - 1]);
 
-        uint16_t calculated_checksum = Message_Calculate_Checksum(
-            dataout, byte_count - CHECKSUM_SIZE);
+            uint16_t calculated_checksum = Message_Calculate_Checksum(
+                dataout, byte_count - CHECKSUM_SIZE);
 
-        if (byte_count == (1 + HEADER_SIZE + expected_payload_length + CHECKSUM_SIZE) &&
-            (received_checksum == calculated_checksum))
-        {
-            flag_fsm_new_message = 1;
+            if (received_checksum == calculated_checksum)
+            {
+                GPIOA->ODR |= (1 << 5);
+                flag_fsm_new_message = 1;
+            }
+            else
+            {
+                // Nếu checksum không hợp lệ, reset FSM
+                Clear_All_State_Fsm();
+            }
+
             fsm_state = FSM_STATE_START;
         }
-        else {
-            Clear_All_State_Fsm();
-            uint8_t data[FRAME_SIZE];
-                        uint8_t length = Create_Message_RESPONSE(dataout[2], RESPONSE_NACK, data);
-                        USART1_Send_Data(data, length); // Gửi phản hồi NACK
-        }
-
         break;
     }
-    return length;
 }
 
 /**
