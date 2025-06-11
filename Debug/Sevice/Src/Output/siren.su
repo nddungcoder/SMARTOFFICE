@@ -3,3 +3,4 @@
 ../Sevice/Src/Output/siren.c:30:6:Siren_Off	8	static
 ../Sevice/Src/Output/siren.c:35:6:Siren_Toggle	8	static
 ../Sevice/Src/Output/siren.c:40:6:Siren_Beep	16	static
+../Sevice/Src/Output/siren.c:47:9:Siren_GetState	16	static

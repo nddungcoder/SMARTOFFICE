@@ -1,2 +1,2 @@
-../Sevice/Src/device_manager.c:12:6:device_init	8	static
-../Sevice/Src/device_manager.c:33:6:DeviceManager_UpdateData	64	static
+../Sevice/Src/device_manager.c:12:6:device_init	32	static
+../Sevice/Src/device_manager.c:37:6:DeviceManager_UpdateData	72	static

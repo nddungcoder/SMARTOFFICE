@@ -1,5 +1,6 @@
-../Sevice/Src/Output/led_rgb.c:26:6:LED_RGB_Init	1
-../Sevice/Src/Output/led_rgb.c:68:6:LED_RGB_Set	1
-../Sevice/Src/Output/led_rgb.c:77:6:LED_RGB_Off	1
-../Sevice/Src/Output/led_rgb.c:84:6:LED_RGB_Get	1
-../Sevice/Src/Output/led_rgb.c:94:6:LED_RGB_SetState	2
+../Sevice/Src/Output/led_rgb.c:23:6:LED_RGB_Init	1
+../Sevice/Src/Output/led_rgb.c:64:6:LED_RGB_Set	1
+../Sevice/Src/Output/led_rgb.c:73:6:LED_RGB_Off	1
+../Sevice/Src/Output/led_rgb.c:80:6:LED_RGB_Get	1
+../Sevice/Src/Output/led_rgb.c:89:6:LED_RGB_SetState	2
+../Sevice/Src/Output/led_rgb.c:100:13:LED_RGB_GetState	5

@@ -11,7 +11,7 @@ void Timer_Init(void)
     // Cấu hình TIM2 cho 1ms (SystemCoreClock = 72MHz)
     htim2.Instance = TIM2;
     htim2.Init.Prescaler = 72 - 1;     // 1 MHz (1 tick = 1us)
-    htim2.Init.Period = 1000 - 1;      // 1000 ticks = 1ms
+    htim2.Init.Period = 1000-1;      // 1000 ticks = 1ms
     htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
     htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 
@@ -22,6 +22,8 @@ void Timer_Init(void)
 
     // Bật timer
     TIM_ENABLE(&htim2);
+
+
 
     // Bật ngắt TIM2 trong NVIC
     NVIC_SetPriority(TIM2_IRQn, 1);
@@ -47,9 +49,17 @@ void Delay_ms(uint32_t ms)
 
 void Delay_us(uint32_t us)
 {
-    // Đếm bằng TIM2 trực tiếp, độ phân giải 1us
-    htim2.Instance->CNT = 0;
-    while (htim2.Instance->CNT < us);
+	if (!(CoreDebug->DEMCR & CoreDebug_DEMCR_TRCENA_Msk))
+	        CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+
+	    if (!(DWT->CTRL & DWT_CTRL_CYCCNTENA_Msk)) {
+	        DWT->CYCCNT = 0;
+	        DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+	    }
+
+	    uint32_t start = DWT->CYCCNT;
+	    uint32_t ticks = us * (SystemCoreClock / 1000000);
+	    while ((DWT->CYCCNT - start) < ticks);
 }
 
 // Handler gọi từ startup file

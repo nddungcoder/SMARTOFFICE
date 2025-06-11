@@ -5,6 +5,13 @@
 void GPIO_Init(GPIO_TypeDef *GPIOx, GPIO_InitTypeDef *GPIO_Init)
 {
     uint32_t pos = 0;
+
+    if (GPIOx == GPIOA) {
+    	RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
+        } else if (GPIOx == GPIOB) {
+        	RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;
+        }
+
     while ((GPIO_Init->Pin >> pos) != 0x00u)
     {
         if ((GPIO_Init->Pin & (1u << pos)) != 0)

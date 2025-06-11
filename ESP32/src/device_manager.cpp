@@ -6,10 +6,10 @@
 device_manager::device_manager()
 {
   // Khởi tạo cảm biến
-  ldr_lux.data_float = 400.00f;
-  gas_ppm.data_float = 150.00f;
-  dht_temperature.data_float = 25.0f;
-  dht_humidity.data_float = 50.0f;
+  ldr_lux.data_float = 0.00f;
+  gas_ppm.data_float = 0.00f;
+  dht_temperature.data_float = 0.00f;
+  dht_humidity.data_float = 0.00f;
 
   // Khởi tạo thiết bị điều khiển
   led_status.data_float = 0.0f;   // LED tắt

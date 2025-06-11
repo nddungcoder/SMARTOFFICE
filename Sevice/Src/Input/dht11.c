@@ -56,7 +56,7 @@ static uint8_t DHT_ReadBit(void)
 {
     while (DHT_ReadPin() == 0)
         ;                 // Chờ đầu 0
-    Delay_us(30);         // Sau 30us kiểm tra
+    Delay_us(40);         // Sau 30us kiểm tra
     return DHT_ReadPin(); // HIGH → 1, LOW → 0
 }
 
@@ -75,6 +75,8 @@ static uint8_t DHT_ReadByte(void)
 
 bool DHT11_Read(uint8_t *humi_int, uint8_t *humi_dec, uint8_t *temp_int, uint8_t *temp_dec)
 {
+	if (!humi_int || !humi_dec || !temp_int || !temp_dec)
+	        return false;
     uint8_t data[5] = {0};
 
     DHT11_Start();
@@ -82,15 +84,15 @@ bool DHT11_Read(uint8_t *humi_int, uint8_t *humi_dec, uint8_t *temp_int, uint8_t
     // Chờ phản hồi từ DHT11
     uint32_t timeout = 0;
     while (DHT_ReadPin())
-        if (++timeout > 1000)
+        if (++timeout > 10000)
             return false;
     timeout = 0;
     while (!DHT_ReadPin())
-        if (++timeout > 1000)
+        if (++timeout > 10000)
             return false;
     timeout = 0;
     while (DHT_ReadPin())
-        if (++timeout > 1000)
+        if (++timeout > 10000)
             return false;
 
     // Đọc 5 byte

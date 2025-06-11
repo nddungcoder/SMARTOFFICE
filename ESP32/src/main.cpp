@@ -1,6 +1,6 @@
 #define BLYNK_TEMPLATE_NAME "SMARTOFFICE"
-#define BLYNK_TEMPLATE_ID "TMPL6-Osyi-Jt"
-#define BLYNK_AUTH_TOKEN "eGmKDjog9NDM3ZWJm2D64h_IKj4l_iLV"
+#define BLYNK_TEMPLATE_ID "TMPL6-wZnxNJL"
+#define BLYNK_AUTH_TOKEN "RRLxGU6_CR6RRj5Mu1LvyZf03gpIoPJ5"
 
 #include <Arduino.h>
 #include <WiFi.h>
@@ -42,7 +42,7 @@ BlynkTimer timer;
 QueueHandle_t command_queue;
 typedef struct
 {
-    ID_t type; // Loại thiết bị (LED, MOTOR, SIREN, AUTO)
+    ID_t type;
     float value;
 } command_t;
 
@@ -89,7 +89,7 @@ bool isDifferent(float a, float b) {
 void updateBlynkData()
 {
     static float last_lux = -1, last_gas = -1, last_temp = -1, last_humi = -1;
-    static float last_led = -1, last_motor = -1, last_auto = -1;
+    static float last_led = -1, last_motor = -1, last_siren = -1, last_auto = -1;
 
     float lux = device.getLdrLux();
     float gas = device.getGasPPM();
@@ -97,6 +97,8 @@ void updateBlynkData()
     float humi = device.getDhtHumidity();
     float led = device.getLEDStatus();
     float motor = device.getMotorSpeed();
+    float siren = device.getSirenStatus();
+
     float autoMode = device.getAutoMode();
 
     if (isDifferent(lux, last_lux)) {
@@ -127,6 +129,11 @@ void updateBlynkData()
     if (isDifferent(motor, last_motor)) {
         Blynk.virtualWrite(MOTOR_VPIN, motor);
         last_motor = motor;
+    }
+
+    if (isDifferent(siren, last_siren)) {
+        Blynk.virtualWrite(SIREN_VPIN, siren);
+        last_siren = siren;
     }
 
     if (isDifferent(autoMode, last_auto)) {

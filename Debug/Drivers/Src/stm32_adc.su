@@ -1,5 +1,6 @@
 ../Drivers/Src/stm32_adc.c:5:15:ADC_Init	24	static
-../Drivers/Src/stm32_adc.c:50:15:ADC_ConfigChannel	16	static
-../Drivers/Src/stm32_adc.c:67:15:ADC_Start	16	static
-../Drivers/Src/stm32_adc.c:80:15:ADC_PollForConversion	16	static
-../Drivers/Src/stm32_adc.c:93:10:ADC_GetValue	16	static
+../Drivers/Src/stm32_adc.c:77:15:ADC_ConfigChannel	24	static
+../Drivers/Src/stm32_adc.c:133:15:ADC_Start	24	static
+../Drivers/Src/stm32_adc.c:160:15:ADC_PollForConversion	16	static
+../Drivers/Src/stm32_adc.c:176:10:ADC_GetValue	16	static
+../Drivers/Src/stm32_adc.c:183:15:ADC_ReadAll	32	static

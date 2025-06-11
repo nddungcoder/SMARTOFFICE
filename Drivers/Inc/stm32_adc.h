@@ -77,6 +77,14 @@ StatusTypeDef ADC_Start(ADC_HandleTypeDef* hadc);
 StatusTypeDef ADC_PollForConversion(ADC_HandleTypeDef* hadc, uint32_t Timeout);
 uint32_t ADC_GetValue(ADC_HandleTypeDef* hadc);
 
+/**
+ * @brief Đọc tất cả giá trị ADC vào buffer
+ * @param hadc: Con trỏ đến cấu trúc ADC_HandleTypeDef
+ * @param buffer: Con trỏ đến mảng để lưu giá trị ADC
+ * @param count: Số lượng giá trị cần đọc (tối đa 16)
+ */
+StatusTypeDef ADC_ReadAll(ADC_HandleTypeDef *hadc, uint16_t *buffer, uint8_t count);
+
 #ifdef __cplusplus
 }
 #endif

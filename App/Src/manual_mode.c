@@ -22,17 +22,17 @@ void Manual_Process(void)
             switch (message->header[1])
             {
             case LED:
-                sys.led_state = Convert_Bytes_To_Float(message->payload[0], message->payload[1], message->payload[2], message->payload[3]);
-                LED_RGB_SetState(sys.led_state);
+                float led_state = Convert_Bytes_To_Float(message->payload[0], message->payload[1], message->payload[2], message->payload[3]);
+                LED_RGB_SetState(led_state);
                 break;
             case MOTOR:
-                sys.motor_level = Convert_Bytes_To_Float(message->payload[0], message->payload[1], message->payload[2], message->payload[3]);
-                Motor_SetLevel(sys.motor_level);
+                float motor_level = Convert_Bytes_To_Float(message->payload[0], message->payload[1], message->payload[2], message->payload[3]);
+                Motor_SetLevel(motor_level);
 
                 break;
             case SIREN:
-                sys.siren_on = Convert_Bytes_To_Float(message->payload[0], message->payload[1], message->payload[2], message->payload[3]);
-                if (sys.siren_on > 0)
+                float siren_on = Convert_Bytes_To_Float(message->payload[0], message->payload[1], message->payload[2], message->payload[3]);
+                if (siren_on > 0)
                 {
                     Siren_On();
                 }
@@ -42,8 +42,14 @@ void Manual_Process(void)
                 }
                 break;
             case AUTO:
-                sys.mode = Convert_Bytes_To_Float(message->payload[0], message->payload[1], message->payload[2], message->payload[3]);
-                // TODO
+                float mode = Convert_Bytes_To_Float(message->payload[0], message->payload[1], message->payload[2], message->payload[3]);
+                if (mode == 0.0f)
+                {
+                    sys.mode = AUTO_MODE;
+                    uint8_t data[20];
+                    uint8_t length = Create_Message_Notify(AUTO, sys.mode, data);
+                    USART1_Send_Data(data, length);
+                }
                 break;
             }
         }

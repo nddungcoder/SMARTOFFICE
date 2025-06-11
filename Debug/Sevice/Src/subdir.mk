@@ -5,15 +5,12 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Sevice/Src/device_manager.c \
 ../Sevice/Src/interrupts.c 
 
 OBJS += \
-./Sevice/Src/device_manager.o \
 ./Sevice/Src/interrupts.o 
 
 C_DEPS += \
-./Sevice/Src/device_manager.d \
 ./Sevice/Src/interrupts.d 
 
 
@@ -24,7 +21,7 @@ Sevice/Src/%.o Sevice/Src/%.su Sevice/Src/%.cyclo: ../Sevice/Src/%.c Sevice/Src/
 clean: clean-Sevice-2f-Src
 
 clean-Sevice-2f-Src:
-	-$(RM) ./Sevice/Src/device_manager.cyclo ./Sevice/Src/device_manager.d ./Sevice/Src/device_manager.o ./Sevice/Src/device_manager.su ./Sevice/Src/interrupts.cyclo ./Sevice/Src/interrupts.d ./Sevice/Src/interrupts.o ./Sevice/Src/interrupts.su
+	-$(RM) ./Sevice/Src/interrupts.cyclo ./Sevice/Src/interrupts.d ./Sevice/Src/interrupts.o ./Sevice/Src/interrupts.su
 
 .PHONY: clean-Sevice-2f-Src
 

@@ -18,7 +18,7 @@ extern device_manager device;
 extern FrameQueue txQueue;
 
 static message_t message;
-uint8_t uart_buffer[FRAME_SIZE]; 
+uint8_t uart_buffer[FRAME_SIZE];
 
 /**
  * @brief Khởi tạo giao tiếp UART với tốc độ baud mặc định.
@@ -93,7 +93,8 @@ void uart_event_task(void *pvParameters)
         }
     }
 }
-typedef enum {
+typedef enum
+{
     WAITING_TO_SEND,
     WAITING_FOR_RESPONSE,
     RESPONSE_ACKED,
@@ -102,7 +103,7 @@ typedef enum {
 
 volatile uart_tx_state_t tx_state = WAITING_TO_SEND;
 static uint32_t retry_count = 0;
-static uint32_t last_sent_time = 0; 
+static uint32_t last_sent_time = 0;
 
 void uart_tx_task(void *param)
 {
@@ -115,7 +116,7 @@ void uart_tx_task(void *param)
             {
                 uint8_t data[FRAME_SIZE];
                 front(&txQueue, data);
-                
+
                 if (data != NULL)
                 {
                     uart_write_bytes(UART_NUM, data, FRAME_SIZE);
@@ -137,7 +138,7 @@ void uart_tx_task(void *param)
         case RESPONSE_ACKED:
             Serial.println("ACK nhận thành công. Gửi frame kế tiếp.");
             pop(&txQueue);
-            retry_count = 0;  // Reset khi đã gửi thành công
+            retry_count = 0; // Reset khi đã gửi thành công
             tx_state = WAITING_TO_SEND;
             break;
 
@@ -150,7 +151,7 @@ void uart_tx_task(void *param)
             }
             else
             {
-                Serial.println("Thất bại sau 3 lần. Bỏ qua frame.");
+                Serial.println("Thất bại sau 5 lần. Bỏ qua frame.");
                 pop(&txQueue);
                 retry_count = 0;
                 tx_state = WAITING_TO_SEND;
@@ -162,14 +163,12 @@ void uart_tx_task(void *param)
             break;
         }
 
-        vTaskDelay(10 / portTICK_PERIOD_MS); // Nhường CPU
+        vTaskDelay(10 / portTICK_PERIOD_MS);
     }
 }
 
-
 void COM_HandleNotifyMessage(device_manager &device)
 {
-    // Serial.print("Notify ");
 
     if (message.header[2] == 4)
     {
@@ -177,62 +176,29 @@ void COM_HandleNotifyMessage(device_manager &device)
         {
         case CDS:
             device.setLdrLuxBytes(message.payload[0], message.payload[1], message.payload[2], message.payload[3]);
-
-            // Serial.print(String("CDS "));
-            // Serial.print(" ");
-            // Serial.println(device.getLdrLux());
             break;
         case MQ2:
             device.setGasPPMBytes(message.payload[0], message.payload[1], message.payload[2], message.payload[3]);
-
-            // Serial.print(String("AIR_QUALITY "));
-            // Serial.print(" ");
-            // Serial.println(device.getGasPPM());
             break;
         case DHT11_TEMP:
             device.setDhtTemperatureBytes(message.payload[0], message.payload[1], message.payload[2], message.payload[3]);
-
-            // Serial.print(String("DHT11_TEMP "));
-            // Serial.print(" ");
-            // Serial.println(device.getDhtTemperature());
             break;
         case DHT11_HUMI:
             device.setDhtHumidityBytes(message.payload[0], message.payload[1], message.payload[2], message.payload[3]);
-
-            // Serial.print(String("DHT11_HUMI "));
-            // Serial.print(" ");
-            // Serial.println(device.getDhtHumidity());
             break;
         case LED:
             device.setLEDStatusBytes(message.payload[0], message.payload[1], message.payload[2], message.payload[3]);
-
-            // Serial.print(String("LED "));
-            // Serial.print(" ");
-            // Serial.println(device.getLEDStatus());
             break;
         case MOTOR:
             device.setMotorSpeedBytes(message.payload[0], message.payload[1], message.payload[2], message.payload[3]);
-
-            // Serial.print(String("MOTOR "));
-            // Serial.print(" ");
-            // Serial.println(device.getMotorSpeed());
             break;
         case SIREN:
             device.setSirenStatusBytes(message.payload[0], message.payload[1], message.payload[2], message.payload[3]);
-
-            // Serial.print(String("SIREN "));
-            // Serial.print(" ");
-            // Serial.println(device.getSirenStatus());
             break;
 
         case AUTO:
             device.setAutoModeBytes(message.payload[0], message.payload[1], message.payload[2], message.payload[3]);
-
-            // Serial.print(String("AUTO "));
-            // Serial.print(" ");
-            // Serial.println(device.getAutoMode());
             break;
-
         }
     }
 }

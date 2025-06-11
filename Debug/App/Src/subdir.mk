@@ -7,17 +7,20 @@
 C_SRCS += \
 ../App/Src/app_main.c \
 ../App/Src/auto_mode.c \
-../App/Src/manual_mode.c 
+../App/Src/manual_mode.c \
+../App/Src/system_manager.c 
 
 OBJS += \
 ./App/Src/app_main.o \
 ./App/Src/auto_mode.o \
-./App/Src/manual_mode.o 
+./App/Src/manual_mode.o \
+./App/Src/system_manager.o 
 
 C_DEPS += \
 ./App/Src/app_main.d \
 ./App/Src/auto_mode.d \
-./App/Src/manual_mode.d 
+./App/Src/manual_mode.d \
+./App/Src/system_manager.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -27,7 +30,7 @@ App/Src/%.o App/Src/%.su App/Src/%.cyclo: ../App/Src/%.c App/Src/subdir.mk
 clean: clean-App-2f-Src
 
 clean-App-2f-Src:
-	-$(RM) ./App/Src/app_main.cyclo ./App/Src/app_main.d ./App/Src/app_main.o ./App/Src/app_main.su ./App/Src/auto_mode.cyclo ./App/Src/auto_mode.d ./App/Src/auto_mode.o ./App/Src/auto_mode.su ./App/Src/manual_mode.cyclo ./App/Src/manual_mode.d ./App/Src/manual_mode.o ./App/Src/manual_mode.su
+	-$(RM) ./App/Src/app_main.cyclo ./App/Src/app_main.d ./App/Src/app_main.o ./App/Src/app_main.su ./App/Src/auto_mode.cyclo ./App/Src/auto_mode.d ./App/Src/auto_mode.o ./App/Src/auto_mode.su ./App/Src/manual_mode.cyclo ./App/Src/manual_mode.d ./App/Src/manual_mode.o ./App/Src/manual_mode.su ./App/Src/system_manager.cyclo ./App/Src/system_manager.d ./App/Src/system_manager.o ./App/Src/system_manager.su
 
 .PHONY: clean-App-2f-Src
 

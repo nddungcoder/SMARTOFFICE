@@ -18,7 +18,13 @@
  * 
  * @param ro_clean_air Giá trị Ro (điện trở cảm biến trong không khí sạch), thường từ 9kΩ đến 10kΩ.
  */
-void MQ2_Init(float ro_clean_air);
+void MQ2_Init(void);
+
+/**
+ * @brief Đọc giá trị ADC từ cảm biến MQ2.
+ * Hàm này đọc giá trị ADC từ cảm biến MQ2 và trả về giá trị thô (raw) dưới dạng uint16_t.
+ */
+uint16_t MQ2_ReadRaw(void);
 
 /**
  * @brief Đọc và tính toán chất lượng không khí từ cảm biến MQ2.
@@ -28,6 +34,6 @@ void MQ2_Init(float ro_clean_air);
  * 
  * @return Giá trị chất lượng không khí (float). Giá trị càng cao → không khí càng ô nhiễm.
  */
-float MQ2_ReadAirQuality(void);
+float MQ2_ReadLevel(void);
 
 #endif /* INC_MQ2_H_ */

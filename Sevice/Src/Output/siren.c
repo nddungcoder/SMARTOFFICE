@@ -19,17 +19,17 @@ void Siren_Init(void)
         .Mode = GPIO_MODE_OUTPUT_PP,
         .Speed = GPIO_SPEED_HIGH};
     GPIO_Init(SIREN_GPIO_PORT, &gpio);
-    GPIO_WritePin(SIREN_GPIO_PORT, SIREN_GPIO_PIN, GPIO_PIN_RESET);
+    GPIO_WritePin(SIREN_GPIO_PORT, SIREN_GPIO_PIN, GPIO_PIN_SET);
 }
 
 void Siren_On(void)
 {
-    GPIO_WritePin(SIREN_GPIO_PORT, SIREN_GPIO_PIN, GPIO_PIN_SET);
+    GPIO_WritePin(SIREN_GPIO_PORT, SIREN_GPIO_PIN, GPIO_PIN_RESET);
 }
 
 void Siren_Off(void)
 {
-    GPIO_WritePin(SIREN_GPIO_PORT, SIREN_GPIO_PIN, GPIO_PIN_RESET);
+    GPIO_WritePin(SIREN_GPIO_PORT, SIREN_GPIO_PIN, GPIO_PIN_SET);
 }
 
 void Siren_Toggle(void)
@@ -42,4 +42,12 @@ void Siren_Beep(uint32_t duration_ms)
     Siren_On();
     Delay_ms(duration_ms);
     Siren_Off();
+}
+
+uint8_t Siren_GetState(void)
+{
+    GPIO_PinState state = GPIO_ReadPin(SIREN_GPIO_PORT, SIREN_GPIO_PIN);
+
+    // Còi kêu khi pin ở mức RESET (0)
+    return (state == GPIO_PIN_RESET) ? 1 : 0;
 }

@@ -5,11 +5,11 @@
 #include "queue.h"
 #include "auto_mode.h"
 #include "manual_mode.h"
-#include "device_manager.h"
+#include "system_manager.h"
 #include "timer_base.h"
 
-#include "motor.h"
-
+#include "dht11.h"
+#include "mq2.h"
 UART_HandleTypeDef huart1;
 FrameQueue g_uartQueue;
 uint8_t uart_rx_buffer[FRAME_SIZE];
@@ -68,15 +68,15 @@ void App_Init(void)
 
 void App_Loop(void)
 {
-     DeviceManager_UpdateData();
-    if (sys.mode == AUTO_MODE)
-    {
+      DeviceManager_UpdateData();
+      if (sys.mode == AUTO_MODE)
+      {
 
-        Auto_Process();
-    }
-    else if (sys.mode == MANUAL_MODE)
-    {
-        Manual_Process();
-    }
-
+          Auto_Process();
+      }
+      else if (sys.mode == MANUAL_MODE)
+      {
+          Manual_Process();
+      }
+      Delay_ms(150);
 }

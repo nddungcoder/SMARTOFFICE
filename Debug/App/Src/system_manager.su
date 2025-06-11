@@ -1,0 +1,2 @@
+../App/Src/system_manager.c:12:6:device_init	32	static
+../App/Src/system_manager.c:37:6:DeviceManager_UpdateData	72	static

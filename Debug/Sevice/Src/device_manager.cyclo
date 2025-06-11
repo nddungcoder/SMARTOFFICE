@@ -1,2 +1,2 @@
 ../Sevice/Src/device_manager.c:12:6:device_init	1
-../Sevice/Src/device_manager.c:33:6:DeviceManager_UpdateData	7
+../Sevice/Src/device_manager.c:37:6:DeviceManager_UpdateData	9

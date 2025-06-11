@@ -5,4 +5,4 @@
 ../Sevice/Src/Input/dht11.c:45:13:DHT11_Start	1
 ../Sevice/Src/Input/dht11.c:55:16:DHT_ReadBit	2
 ../Sevice/Src/Input/dht11.c:63:16:DHT_ReadByte	3
-../Sevice/Src/Input/dht11.c:76:6:DHT11_Read	9
+../Sevice/Src/Input/dht11.c:76:6:DHT11_Read	13

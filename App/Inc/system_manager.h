@@ -1,5 +1,5 @@
-#ifndef NOTIFY_H
-#define NOTIFY_H
+#ifndef __SYSTEM_MANAGER_H
+#define __SYSTEM_MANAGER_H
 
 #include <stdint.h>
 
@@ -19,4 +19,4 @@ void DeviceManager_UpdateData(void);
 
 
 
-#endif // NOTIFY_H
+#endif // system_manager.h
