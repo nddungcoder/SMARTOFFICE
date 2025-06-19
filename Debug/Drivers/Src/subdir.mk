@@ -7,18 +7,21 @@
 C_SRCS += \
 ../Drivers/Src/stm32_adc.c \
 ../Drivers/Src/stm32_gpio.c \
+../Drivers/Src/stm32_rcc.c \
 ../Drivers/Src/stm32_tim.c \
 ../Drivers/Src/stm32_uart.c 
 
 OBJS += \
 ./Drivers/Src/stm32_adc.o \
 ./Drivers/Src/stm32_gpio.o \
+./Drivers/Src/stm32_rcc.o \
 ./Drivers/Src/stm32_tim.o \
 ./Drivers/Src/stm32_uart.o 
 
 C_DEPS += \
 ./Drivers/Src/stm32_adc.d \
 ./Drivers/Src/stm32_gpio.d \
+./Drivers/Src/stm32_rcc.d \
 ./Drivers/Src/stm32_tim.d \
 ./Drivers/Src/stm32_uart.d 
 
@@ -30,7 +33,7 @@ Drivers/Src/%.o Drivers/Src/%.su Drivers/Src/%.cyclo: ../Drivers/Src/%.c Drivers
 clean: clean-Drivers-2f-Src
 
 clean-Drivers-2f-Src:
-	-$(RM) ./Drivers/Src/stm32_adc.cyclo ./Drivers/Src/stm32_adc.d ./Drivers/Src/stm32_adc.o ./Drivers/Src/stm32_adc.su ./Drivers/Src/stm32_gpio.cyclo ./Drivers/Src/stm32_gpio.d ./Drivers/Src/stm32_gpio.o ./Drivers/Src/stm32_gpio.su ./Drivers/Src/stm32_tim.cyclo ./Drivers/Src/stm32_tim.d ./Drivers/Src/stm32_tim.o ./Drivers/Src/stm32_tim.su ./Drivers/Src/stm32_uart.cyclo ./Drivers/Src/stm32_uart.d ./Drivers/Src/stm32_uart.o ./Drivers/Src/stm32_uart.su
+	-$(RM) ./Drivers/Src/stm32_adc.cyclo ./Drivers/Src/stm32_adc.d ./Drivers/Src/stm32_adc.o ./Drivers/Src/stm32_adc.su ./Drivers/Src/stm32_gpio.cyclo ./Drivers/Src/stm32_gpio.d ./Drivers/Src/stm32_gpio.o ./Drivers/Src/stm32_gpio.su ./Drivers/Src/stm32_rcc.cyclo ./Drivers/Src/stm32_rcc.d ./Drivers/Src/stm32_rcc.o ./Drivers/Src/stm32_rcc.su ./Drivers/Src/stm32_tim.cyclo ./Drivers/Src/stm32_tim.d ./Drivers/Src/stm32_tim.o ./Drivers/Src/stm32_tim.su ./Drivers/Src/stm32_uart.cyclo ./Drivers/Src/stm32_uart.d ./Drivers/Src/stm32_uart.o ./Drivers/Src/stm32_uart.su
 
 .PHONY: clean-Drivers-2f-Src
 

@@ -1,4 +1,4 @@
-/* stm32_uart.h - Minimal UART HAL Interface for STM32F103C6T6 */
+/* stm32_uart.h - Minimal UART Interface for STM32F103C6T6 */
 
 #ifndef __STM32_UART_H
 #define __STM32_UART_H

@@ -7,6 +7,7 @@
 "./Core/Src/sysmem.o"
 "./Drivers/Src/stm32_adc.o"
 "./Drivers/Src/stm32_gpio.o"
+"./Drivers/Src/stm32_rcc.o"
 "./Drivers/Src/stm32_tim.o"
 "./Drivers/Src/stm32_uart.o"
 "./Sevice/Src/Com/fsm_message.o"
