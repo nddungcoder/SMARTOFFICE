@@ -1,4 +1,4 @@
-/* stm32_uart.c - Minimal UART HAL Implementation for STM32F103C6T6 */
+/* stm32_uart.c - Minimal UART Implementation for STM32F103C6T6 */
 
 #include "stm32_uart.h"
 

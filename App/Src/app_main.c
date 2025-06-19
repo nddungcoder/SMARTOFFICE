@@ -68,15 +68,30 @@ void App_Init(void)
 
 void App_Loop(void)
 {
-      DeviceManager_UpdateData();
-      if (sys.mode == AUTO_MODE)
-      {
+	static uint32_t lastDeviceUpdateTick = 0; // Cho 200ms
+	    static uint32_t lastProcessTick = 0;      // Cho 50ms
 
-          Auto_Process();
-      }
-      else if (sys.mode == MANUAL_MODE)
-      {
-          Manual_Process();
-      }
-      Delay_ms(150);
+	    uint32_t currentTick = GetTick(); // tick_ms hiện tại
+
+	    // Task 1: Update device mỗi 200ms
+	    if ((currentTick - lastDeviceUpdateTick) >= 200)
+	    {
+	        DeviceManager_UpdateData();
+	        lastDeviceUpdateTick = currentTick;
+	    }
+
+	    // Task 2: Xử lý chế độ mỗi 50ms
+	    if ((currentTick - lastProcessTick) >= 50)
+	    {
+	        if (sys.mode == AUTO_MODE)
+	        {
+	            Auto_Process();
+	        }
+	        else if (sys.mode == MANUAL_MODE)
+	        {
+	            Manual_Process();
+	        }
+
+	        lastProcessTick = currentTick;
+	    }
 }

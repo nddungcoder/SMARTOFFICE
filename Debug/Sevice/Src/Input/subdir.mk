@@ -5,19 +5,16 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Sevice/Src/Input/adc_sensor.c \
 ../Sevice/Src/Input/cds.c \
 ../Sevice/Src/Input/dht11.c \
 ../Sevice/Src/Input/mq2.c 
 
 OBJS += \
-./Sevice/Src/Input/adc_sensor.o \
 ./Sevice/Src/Input/cds.o \
 ./Sevice/Src/Input/dht11.o \
 ./Sevice/Src/Input/mq2.o 
 
 C_DEPS += \
-./Sevice/Src/Input/adc_sensor.d \
 ./Sevice/Src/Input/cds.d \
 ./Sevice/Src/Input/dht11.d \
 ./Sevice/Src/Input/mq2.d 
@@ -30,7 +27,7 @@ Sevice/Src/Input/%.o Sevice/Src/Input/%.su Sevice/Src/Input/%.cyclo: ../Sevice/S
 clean: clean-Sevice-2f-Src-2f-Input
 
 clean-Sevice-2f-Src-2f-Input:
-	-$(RM) ./Sevice/Src/Input/adc_sensor.cyclo ./Sevice/Src/Input/adc_sensor.d ./Sevice/Src/Input/adc_sensor.o ./Sevice/Src/Input/adc_sensor.su ./Sevice/Src/Input/cds.cyclo ./Sevice/Src/Input/cds.d ./Sevice/Src/Input/cds.o ./Sevice/Src/Input/cds.su ./Sevice/Src/Input/dht11.cyclo ./Sevice/Src/Input/dht11.d ./Sevice/Src/Input/dht11.o ./Sevice/Src/Input/dht11.su ./Sevice/Src/Input/mq2.cyclo ./Sevice/Src/Input/mq2.d ./Sevice/Src/Input/mq2.o ./Sevice/Src/Input/mq2.su
+	-$(RM) ./Sevice/Src/Input/cds.cyclo ./Sevice/Src/Input/cds.d ./Sevice/Src/Input/cds.o ./Sevice/Src/Input/cds.su ./Sevice/Src/Input/dht11.cyclo ./Sevice/Src/Input/dht11.d ./Sevice/Src/Input/dht11.o ./Sevice/Src/Input/dht11.su ./Sevice/Src/Input/mq2.cyclo ./Sevice/Src/Input/mq2.d ./Sevice/Src/Input/mq2.o ./Sevice/Src/Input/mq2.su
 
 .PHONY: clean-Sevice-2f-Src-2f-Input
 

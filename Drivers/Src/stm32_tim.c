@@ -1,4 +1,4 @@
-/* stm32_tim.c - Minimal Timer HAL Implementation for STM32F103C6T6 */
+/* stm32_tim.c - Minimal Timer Implementation for STM32F103C6T6 */
 
 #include "stm32_tim.h"
 

@@ -30,8 +30,8 @@
 #define AUTO_PIN V8
 #
 
-char ssid[] = "P 504";
-char pass[] = "12345679";
+char ssid[] = "OPPO A92";
+char pass[] = "chaoanhdi";
 
 device_manager device;
 

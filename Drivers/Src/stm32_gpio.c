@@ -1,4 +1,4 @@
-/* stm32_gpio.c - Minimal GPIO HAL Implementation for STM32F103C6T6 with EXTI */
+/* stm32_gpio.c - Minimal GPIO Implementation for STM32F103C6T6 with EXTI */
 
 #include "stm32_gpio.h"
 

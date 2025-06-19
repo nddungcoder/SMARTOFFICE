@@ -30,7 +30,6 @@ void Timer_Init(void)
     NVIC_EnableIRQ(TIM2_IRQn);
 }
 
-// Gọi trong TIM2_IRQHandler
 void IncTick(void)
 {
     tick_ms++;
@@ -62,10 +61,10 @@ void Delay_us(uint32_t us)
 	    while ((DWT->CYCCNT - start) < ticks);
 }
 
-// Handler gọi từ startup file
+// Handler xử lý ngắt TIM2
 void TIM2_IRQHandler(void)
 {
-    if (TIM2->SR & TIM_SR_UIF)
+    if (TIM2->SR & TIM_SR_UIF) // Kiểm tra cờ ngắt Update Interrupt Flag
     {
         TIM2->SR &= ~TIM_SR_UIF;
         IncTick();
