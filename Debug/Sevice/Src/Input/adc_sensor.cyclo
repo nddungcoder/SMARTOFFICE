@@ -1,6 +1,0 @@
-../Sevice/Src/Input/adc_sensor.c:14:6:ADC_Sensor_Init	1
-../Sevice/Src/Input/adc_sensor.c:45:6:ADC_Sensor_ReadAll	1
-../Sevice/Src/Input/adc_sensor.c:50:10:ADC_CDS_GetRaw	1
-../Sevice/Src/Input/adc_sensor.c:55:10:ADC_MQ2_GetRaw	1
-../Sevice/Src/Input/adc_sensor.c:60:7:ADC_CDS_GetLux	1
-../Sevice/Src/Input/adc_sensor.c:65:7:ADC_MQ2_GetLevel	1
