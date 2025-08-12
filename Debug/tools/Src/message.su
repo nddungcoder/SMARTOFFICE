@@ -1,4 +1,0 @@
-../tools/Src/message.c:7:10:Message_Calculate_Checksum	16	static
-../tools/Src/message.c:15:9:Create_Message_Notify	40	static
-../tools/Src/message.c:48:9:Create_Message_RESPONSE	24	static
-../tools/Src/message.c:70:6:Message_Decode	32	static

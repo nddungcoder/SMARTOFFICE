@@ -1,6 +1,0 @@
-../Drivers/Src/stm32_adc.c:5:15:ADC_Init	10
-../Drivers/Src/stm32_adc.c:77:15:ADC_ConfigChannel	9
-../Drivers/Src/stm32_adc.c:133:15:ADC_Start	8
-../Drivers/Src/stm32_adc.c:160:15:ADC_PollForConversion	4
-../Drivers/Src/stm32_adc.c:176:10:ADC_GetValue	2
-../Drivers/Src/stm32_adc.c:183:15:ADC_ReadAll	6

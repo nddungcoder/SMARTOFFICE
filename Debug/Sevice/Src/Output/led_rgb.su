@@ -1,6 +1,0 @@
-../Sevice/Src/Output/led_rgb.c:23:6:LED_RGB_Init	40	static
-../Sevice/Src/Output/led_rgb.c:64:6:LED_RGB_Set	24	static
-../Sevice/Src/Output/led_rgb.c:73:6:LED_RGB_Off	8	static
-../Sevice/Src/Output/led_rgb.c:80:6:LED_RGB_Get	32	static
-../Sevice/Src/Output/led_rgb.c:89:6:LED_RGB_SetState	24	static
-../Sevice/Src/Output/led_rgb.c:100:13:LED_RGB_GetState	16	static

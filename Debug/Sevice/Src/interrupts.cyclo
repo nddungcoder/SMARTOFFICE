@@ -1,3 +1,0 @@
-../Sevice/Src/interrupts.c:25:6:UART_RxCpltCallback	5
-../Sevice/Src/interrupts.c:63:6:TIM_PeriodElapsedCallback	1
-../Sevice/Src/interrupts.c:68:6:GPIO_EXTI_Callback	1

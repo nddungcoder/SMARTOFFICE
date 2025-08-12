@@ -1,9 +1,0 @@
-C:/Users/nguye/STM32CubeIDE/workspace_1.17.0/SMARTOFFICE/Drivers/CMSIS/Include/core_cm3.h:1511:22:__NVIC_EnableIRQ	16	static
-C:/Users/nguye/STM32CubeIDE/workspace_1.17.0/SMARTOFFICE/Drivers/CMSIS/Include/core_cm3.h:1639:22:__NVIC_SetPriority	16	static
-../Drivers/Src/stm32_uart.c:9:15:UART_Init	24	static
-../Drivers/Src/stm32_uart.c:84:15:UART_Transmit	24	static
-../Drivers/Src/stm32_uart.c:111:15:UART_Receive	24	static
-../Drivers/Src/stm32_uart.c:131:6:UART_IRQHandler	24	static
-../Drivers/Src/stm32_uart.c:166:22:UART_Receive_IT	24	static
-../Drivers/Src/stm32_uart.c:211:22:UART_Transmit_IT	24	static
-../Drivers/Src/stm32_uart.c:247:13:UART_RxCpltCallback	16	static

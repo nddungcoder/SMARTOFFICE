@@ -1,8 +1,0 @@
-../tools/Src/queue.c:4:6:Queue_init	1
-../tools/Src/queue.c:10:6:empty	1
-../tools/Src/queue.c:14:6:full	1
-../tools/Src/queue.c:18:5:size	1
-../tools/Src/queue.c:22:6:push	2
-../tools/Src/queue.c:31:6:pop	2
-../tools/Src/queue.c:39:12:front	2
-../tools/Src/queue.c:44:12:back	2

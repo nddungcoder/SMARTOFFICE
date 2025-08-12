@@ -1,3 +1,0 @@
-../Sevice/Src/Input/cds.c:21:6:CDS_Init	40	static
-../Sevice/Src/Input/cds.c:45:10:CDS_ReadRaw	8	static
-../Sevice/Src/Input/cds.c:53:7:CDS_ReadLux	16	static

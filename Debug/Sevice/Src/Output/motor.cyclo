@@ -1,5 +1,0 @@
-../Sevice/Src/Output/motor.c:17:6:Motor_Init	1
-../Sevice/Src/Output/motor.c:63:6:Motor_SetSpeed	4
-../Sevice/Src/Output/motor.c:88:6:Motor_Stop	1
-../Sevice/Src/Output/motor.c:93:6:Motor_SetLevel	5
-../Sevice/Src/Output/motor.c:116:9:Motor_GetLevel	5
